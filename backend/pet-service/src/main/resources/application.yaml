@@ -1,6 +1,9 @@
+server:
+  port: 8082
+
 spring:
   application:
-    name: petinder
+    name: pet-service
 
   datasource:
     url: ${POSTGRES_URL}
@@ -20,3 +23,13 @@ springdoc:
 logging:
   level:
     org.hibernate.SQL: DEBUG
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8079/eureka/
+
+  instance:
+    hostname: localhost
