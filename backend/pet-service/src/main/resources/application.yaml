@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: petinder
+
+  datasource:
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+    try-it-out-enabled: true
+  writer-with-order-by-keys: true
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
