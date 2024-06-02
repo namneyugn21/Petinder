@@ -37,6 +37,9 @@ out/
 ### VS Code ###
 .vscode/
 
+### Environment Variables ###
+env/
+
 # Front-end
 # dependencies
 /node_modules
