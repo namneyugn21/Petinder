@@ -23,5 +23,5 @@ public class Pet {
     private String picture;
 
     @Embedded
-    private PetProperty property;
+    private com.petinder.model.PetProperty property;
 }

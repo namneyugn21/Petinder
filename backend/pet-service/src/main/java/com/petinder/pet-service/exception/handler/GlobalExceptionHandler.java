@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
         String message = WHITE_LIST.contains(e.getClass()) ? e.getMessage() : GENERIC_MSG;
         HttpStatus status = EXCEPTION_TO_HTTP_STATUS.getOrDefault(e.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
 
-        ResponseDTO<?> body = ResponseDTO.error(new ExceptionDTO(message));
+        ResponseDTO<?> body = ResponseDTO.error(new com.petinder.exception.handler.ExceptionDTO(message));
         return ResponseEntity
                 .status(status)
                 .body(body);

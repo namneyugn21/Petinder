@@ -22,7 +22,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PetServiceImpl implements PetService {
+public class PetServiceImpl implements com.petinder.service.PetService {
     private final PetMapper petMapper;
     private final PetRepository petRepository;
 
