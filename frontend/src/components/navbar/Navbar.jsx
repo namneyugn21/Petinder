@@ -36,10 +36,10 @@ const Navbar = () => {
                 }
                 { // Adding mobile menu dropdown
                     toggleMenu && (
-                        <div className='navbar__menu-dropdown'>
+                        <div className='navbar__menu-dropdown ibm-plex-mono-regular'>
                             <div className='navbar__menu-item tracking-in-expand'><a href='#about'>About</a></div>
                             <div className='navbar__menu-item tracking-in-expand'><a href='#discover'>Discover</a></div>
-                            <div className='navbar__menu-item tracking-in-expand'><a href='#learn'>HII</a></div>  
+                            <div className='navbar__menu-item tracking-in-expand'><a href='#learn'>About</a></div>  
                             <div className='navbar__menu-item tracking-in-expand'>Sign In</div>  
                         </div> 
                         
