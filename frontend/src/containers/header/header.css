@@ -116,4 +116,126 @@
               transform: translateY(-120px);
     }
   }
-  
+
+@media screen and (max-width: 1200px) {
+    .about {
+        padding: 120px 150px;
+    }
+    .about__title {
+        padding-top: 120px;
+    }
+    .about__image img {
+        width: 300px;
+        height: 400px;
+    }
+}
+@media screen and (max-width: 1000px) {
+    .about {
+        padding: 120px 80px;
+    }
+    .about__title {
+        padding-top: 120px;
+    }
+    .about__title h1 {
+        font-size: 32px;
+    }
+    .about__introduction p {
+        font-size: 16px;
+    }
+    .about__image img {
+        width: 250px;
+        height: 350px;
+    }
+    .about__button button {
+        width: 150px;
+        height: 50px;
+        font-size: 16px;
+    }
+    .about__button {
+        padding-top: 10px;
+    }
+}
+@media screen and (max-width: 800px) {
+    .about {
+        padding: 120px 80px;
+    }
+    .about__title {
+        padding-top: 120px;
+    }
+    .about__title h1 {
+        font-size: 28px;
+    }
+    .about__introduction p {
+        font-size: 14px;
+    }
+    .about__image img {
+        width: 230px;
+        height: 320px;
+    }
+    .about__button button {
+        width: 140px;
+        height: 40px;
+        font-size: 14px;
+    }
+    .about__button {
+        padding-top: 10px;
+    }
+}
+@media screen and (max-width: 700px) {
+    .about {
+        padding: 120px 80px;
+    }
+    .about__title {
+        padding-top: 120px;
+    }
+    .about__title h1 {
+        font-size: 26px;
+    }
+    .about__introduction p {
+        font-size: 12px;
+    }
+    .about__image img {
+        width: 210px;
+        height: 300px;
+    }
+    .about__button button {
+        width: 120px;
+        height: 40px;
+        font-size: 12px;
+    }
+    .about__button {
+        padding-top: 10px;
+    }
+}
+@media screen and (max-width: 600px) {
+    .about {
+        padding: 100px 20px;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .about__title {
+        padding-top: 80px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 50vh;
+        align-items: center;
+    }
+    .about__title h1 {
+        font-size: 24px;
+        text-align: center;
+    }
+    .about__introduction {
+        text-align: center;
+    }
+    .about__image {
+        width: 100%;
+        justify-content: center;
+        display: none;
+    }
+    .about__button {
+        padding-top: 20px;
+        display: flex;
+        justify-content: center;
+    }
+}
