@@ -33,6 +33,7 @@
     flex-direction: row;
     padding: 150px 180px;
     height: 85vh;
+    background-color: white;
 }
 .about__title {
     width: 50%;
