@@ -12,9 +12,7 @@ const Home = () => {
                     <p>Welcome to Petinder,<br></br><br></br>You can now find your perfect furry companion is as easy as swiping right! Our web application connects you with adorable pets available for adoption at local shelters.<br></br><br></br> Discover your new best friend today!</p>
                 </div>
                 <div className='about__button slide-top-button'>
-                    <NavLink to='/login'>
-                        <button className='ibm-plex-mono-regular'>Get Started</button>
-                    </NavLink>
+                    <button className='ibm-plex-mono-regular'>Get Started</button>
                 </div>
             </div>
             <div className='about__image'>
