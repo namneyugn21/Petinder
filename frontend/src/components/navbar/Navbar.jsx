@@ -24,7 +24,7 @@ const Menu = () => (
 );
 
 const Navbar = () => {
-    const [toggleMenu, setToggleMenu] = useState(false);
+    const [isToggleMenuVisible, setisToggleMenuVisible] = useState(false);
     const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
     const [isFadingOut, setIsFadingOut] = useState(false);
 
@@ -37,6 +37,18 @@ const Navbar = () => {
             }, 250);
         } else {
             setIsLoginFormVisible(true);
+        }
+    };
+
+    const toggleMenu = () => {
+        if (isToggleMenuVisible) {
+            setIsFadingOut(true);
+            setTimeout(() => {
+                setisToggleMenuVisible(false);
+                setIsFadingOut(false);
+            }, 250);
+        } else {
+            setisToggleMenuVisible(true);
         }
     };
 
@@ -67,29 +79,31 @@ const Navbar = () => {
             {/* Adding mobile menu toggle */}
             {<div className='navbar__menu-toggle'>
                 {
-                    toggleMenu 
-                        ? <RiCloseLine color = '#000' size={25} onClick={() => setToggleMenu(!toggleMenu)} />
-                        : <RiMenu3Line color = '#000' size={25} onClick={() => setToggleMenu(!toggleMenu)} />
+                    isToggleMenuVisible 
+                        ? <RiCloseLine color = '#000' size={25} onClick={() => toggleMenu()} />
+                        : <RiMenu3Line color = '#000' size={25} onClick={() => toggleMenu()} />
                 }
                 { // Adding mobile menu dropdown
-                    toggleMenu && (
-                        <div className='navbar__menu-dropdown fade-in ibm-plex-mono-regular'>
-                            <div className='navbar__menu-item tracking-in-expand'>
-                                <NavLink to='/'>
-                                    <a href='#about'>About</a>
-                                </NavLink>
-                            </div>
-                            <div className='navbar__menu-item tracking-in-expand'><a href='#discover'>Discover</a></div>
-                            <div className='navbar__menu-item tracking-in-expand'><a href='#learn'>About</a></div>  
-                            <div className='navbar__menu-item tracking-in-expand'>
-                                <button className='navbar__menu-button ibm-plex-mono-regular' type='button'>Sign In</button>
-                            </div>  
-                        </div> 
+                    isToggleMenuVisible && (
+                    <div className={`navbar__menu-dropdown ${isFadingOut ? 'fade-out' : 'fade-in'} ibm-plex-mono-regular`}>
+                        <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}>
+                            <NavLink to='/'>
+                                <a href='#about'>About</a>
+                            </NavLink>
+                        </div>
+                        <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}><a href='#discover'>Discover</a></div>
+                        <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}><a href='#learn'>About</a></div>  
+                        <div className='navbar__menu-item tracking-in-expand'>
+                            <button className='navbar__menu-button ibm-plex-mono-regular' type='button' onClick={() => {toggleLoginForm(); setisToggleMenuVisible(false);}}>Sign In</button>
+                        </div>  
+                    </div>
                     )
                 }
             </div>}
+
+            {isToggleMenuVisible && <div className="navbar__overlay fade-in" onClick={() => toggleMenu()}></div>}
         </div>
     )
 }
 
-export default Navbar
+export default Navbar;
