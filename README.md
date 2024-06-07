@@ -4,6 +4,6 @@ Stay tuned for more updates!
 
 ## Previews
 ### Home Page
-![Home Page](<Documentation/Screenshots/homepage.png>)
+![Home Page](<documentation/screenshots/homepage.png>)
 ### Sign In Form
-![Sign In Form](<Documentation/Screenshots/signin.png>)
+![Sign In Form](<documentation/screenshots/signin.png>)
