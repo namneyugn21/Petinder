@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { RiMenu3Line, RiCloseLine } from 'react-icons/ri';
 import { PiPawPrintFill } from "react-icons/pi";
 import { NavLink } from 'react-router-dom';
@@ -89,11 +89,7 @@ const Navbar = () => {
                 { // Adding mobile menu dropdown
                     isToggleMenuVisible && (
                     <div className={`navbar__menu-dropdown ${isFadingOut ? 'fade-out' : 'fade-in'} ibm-plex-mono-regular`}>
-                        <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}>
-                            <NavLink to='/'>
-                                <a href='#about'>About</a>
-                            </NavLink>
-                        </div>
+                        <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}><a href='#about'>About</a></div>
                         <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}><a href='#discover'>Discover</a></div>
                         <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}><a href='#safety'>Safety</a></div>  
                         <div className='navbar__menu-item tracking-in-expand'>

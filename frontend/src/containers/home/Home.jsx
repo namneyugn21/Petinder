@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './home.css'
 import Safety from '../../components/safety/Safety'
 import About from '../../components/about/About'
