@@ -7,3 +7,5 @@ Stay tuned for more updates!
 ![Home Page](<documentation/screenshots/homepage.png>)
 ### Sign In Form
 ![Sign In Form](<documentation/screenshots/signin.png>)
+### Safety Information
+![Sign In Form](<documentation/screenshots/safety.png>)

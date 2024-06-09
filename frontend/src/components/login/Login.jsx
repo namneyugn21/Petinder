@@ -1,32 +1,10 @@
 import React from 'react';
 import { FcGoogle } from "react-icons/fc";
 import { RiCloseLine, RiFacebookCircleFill } from 'react-icons/ri';
-import { useGoogleLogin } from '@react-oauth/google';
 import './login.css';
 import logo from '../../assets/logo.png';
 
 const Login = ({ isLoginFormVisible, toggleLoginForm, isFadingOut }) => {
-    const login = useGoogleLogin({
-        onSuccess: async (codeResponse) => {
-            // Send token to backend
-            const response = await fetch('YOUR_BACKEND_ENDPOINT', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ token: codeResponse.token }),
-            });
-            if (response.ok) {
-                // Handle success
-                console.log('Token sent to backend successfully');
-            } else {
-                // Handle error
-                console.error('Failed to send token to backend');
-            }
-        },
-        flow: 'auth-code',
-    });
-
     return (
         <>
             {isLoginFormVisible && (
@@ -37,7 +15,7 @@ const Login = ({ isLoginFormVisible, toggleLoginForm, isFadingOut }) => {
                         <img src={logo} alt='logo' />
                         <h2 className='inter__bold'>Get Started !</h2>
                         <p className='ibm-plex-mono-regular'>By signing in, you agree to our terms and conditions.</p>
-                        <button className='navbar__menu-sign-in-form__icon-container' onClick={() => login()}>
+                        <button className='navbar__menu-sign-in-form__icon-container'>
                             <div className='navbar__menu-sign-in-form__icon-inner-container'>
                                 <FcGoogle />
                             </div>

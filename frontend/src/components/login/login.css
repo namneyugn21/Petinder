@@ -18,12 +18,11 @@
     top: 20px;
     right: 20px;
     cursor: pointer;
-
 }
 .navbar__menu-sign-in-form img {
     width: 100px;
     height: auto;
-    margin: 10px auto;
+    margin: 5px auto;
 }
 .navbar__menu-sign-in-form h2 {
     font-size: 24px;
@@ -35,7 +34,6 @@
     line-height: 1.5;
     text-align: center;
     padding: 5px;
-    margin-bottom: 10px;
 }
 .navbar__menu-sign-in-form__icon-container {
     background-color: #042c54;

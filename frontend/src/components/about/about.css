@@ -1,0 +1,243 @@
+.ibm-plex-mono-light {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.ibm-plex-mono-regular {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.ibm-plex-mono-medium {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.ibm-plex-mono-semibold {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.ibm-plex-mono-bold {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 700;
+    font-style: normal;
+}
+  
+.about {
+    display: flex;
+    flex-direction: row;
+    padding: calc(150px + 10vh) 180px;
+    height: 100vh;
+    background-color: white;
+}
+.about__title {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 150px;
+}
+.about__title h1 {
+    font-size: 36px;
+    color: #042c54;
+}
+.about__introduction p {
+    font-size: 18px;
+    line-height: 1.5;
+    color: hsla(210, 91%, 17%, 0.7);
+}
+.about__image {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: end;
+}
+.about__image img {
+    width: 350px;
+    height: 450px;
+    object-fit: cover;
+    border: 5px solid #042c54;
+    border-radius: 10%;
+}
+.about__button {
+    padding-top: 20px;
+    display: flex;
+    align-items: end;
+}
+.about__button button {
+    width: 185px;
+    height: 50px;
+    border: transparent;
+    font-size: 17px;
+    border-radius: 25px;
+    background-color: #042c54;
+    color: #A1CCE4;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s ease;
+}
+.about__button button:hover {
+    background-color: transparent;
+    border: 2px solid #042c54;
+    color: #042c54;
+}
+.slide-top-title {
+	-webkit-animation: slide-top 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: slide-top 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+.slide-top-introduction {
+	-webkit-animation: slide-top 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.1s both;
+	        animation: slide-top 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.1s both;
+}
+.slide-top-button {
+	-webkit-animation: slide-top 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s both;
+	        animation: slide-top 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s both;
+}
+ @-webkit-keyframes slide-top {
+    0% {
+      -webkit-transform: translateY(0);
+              transform: translateY(0);
+    }
+    100% {
+      -webkit-transform: translateY(-120px);
+              transform: translateY(-120px);
+    }
+  }
+  @keyframes slide-top {
+    0% {
+      -webkit-transform: translateY(0);
+              transform: translateY(0);
+    }
+    100% {
+      -webkit-transform: translateY(-120px);
+              transform: translateY(-120px);
+    }
+  }
+
+@media screen and (max-width: 1200px) {
+    .about {
+        padding: calc(150px + 10vh) 180px 100px 180px;
+    }
+    .about__title {
+        padding-top: 120px;
+    }
+    .about__image img {
+        width: 300px;
+        height: 400px;
+    }
+}
+@media screen and (max-width: 1000px) {
+    .about {
+        padding: calc(150px + 10vh) 130px 100px 130px;
+    }
+    .about__title {
+        padding-top: 120px;
+    }
+    .about__title h1 {
+        font-size: 32px;
+    }
+    .about__introduction p {
+        font-size: 16px;
+    }
+    .about__image img {
+        width: 250px;
+        height: 350px;
+    }
+    .about__button button {
+        width: 150px;
+        height: 50px;
+        font-size: 16px;
+    }
+    .about__button {
+        padding-top: 10px;
+    }
+}
+@media screen and (max-width: 800px) {
+    .about {
+        padding: calc(150px + 10vh) 80px 100px 80px;
+    }
+    .about__title {
+        padding-top: 120px;
+    }
+    .about__title h1 {
+        font-size: 28px;
+    }
+    .about__introduction p {
+        font-size: 14px;
+    }
+    .about__image img {
+        width: 230px;
+        height: 320px;
+    }
+    .about__button button {
+        width: 140px;
+        height: 40px;
+        font-size: 14px;
+    }
+    .about__button {
+        padding-top: 10px;
+    }
+}
+@media screen and (max-width: 700px) {
+    .about {
+        padding: calc(150px + 10vh) 80px 100px 80px;
+    }
+    .about__title {
+        padding-top: 120px;
+    }
+    .about__title h1 {
+        font-size: 28px;
+    }
+    .about__introduction p {
+        font-size: 16px;
+    }
+    .about__image img {
+        width: 210px;
+        height: 300px;
+    }
+    .about__button button {
+        width: 140px;
+        height: 45px;
+        font-size: 16px;
+    }
+    .about__button {
+        padding-top: 10px;
+    }
+}
+@media screen and (max-width: 600px) {
+    .about {
+        padding: calc(200px + 10vh) 30px 100px 30px;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .about__title {
+        padding-top: 80px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 50vh;
+        align-items: center;
+    }
+    .about__title h1 {
+        font-size: 28px;
+        text-align: center;
+    }
+    .about__introduction {
+        text-align: center;
+    }
+    .about__image {
+        width: 100%;
+        justify-content: center;
+        display: none;
+    }
+    .about__button {
+        padding-top: 20px;
+        display: flex;
+        justify-content: center;
+    }
+}
