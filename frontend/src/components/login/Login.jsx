@@ -19,7 +19,7 @@ const Login = ({ isLoginFormVisible, toggleLoginForm, isFadingOut }) => {
                             <div className='navbar__menu-sign-in-form__icon-inner-container'>
                                 <FcGoogle />
                             </div>
-                            <span className='inter__medium'>Google Account</span>
+                            <a className='inter__medium' href='http://localhost:8083/oauth2/authorization/google?redirect_uri=http://localhost:3000/success'>Google Account</a>
                         </button>
                         <div className='navbar__menu-sign-in-form__icon-container '>
                             <div className='navbar__menu-sign-in-form__icon-inner-container'>
