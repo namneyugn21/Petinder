@@ -9,7 +9,6 @@ import com.petinder.auth_service.repository.RoleRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -17,8 +16,10 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Optional;
 import java.util.Set;
 
@@ -51,9 +52,8 @@ public class AuthServiceImpl implements AuthService {
         if (authentication instanceof OAuth2AuthenticationToken token) {
             if (authentication.getPrincipal() instanceof OAuth2User user) {
                 // Save the user into the database if the user is new
-                Account account;
                 try {
-                    account = registerIfNeed(user, token.getAuthorizedClientRegistrationId());
+                    registerIfNeed(user, token.getAuthorizedClientRegistrationId());
                 } catch (Exception e) {
                     throw new RuntimeException("Fail to register/lookup an OAuth2 User", e);    // TODO: custom exception
                 }
@@ -63,17 +63,14 @@ public class AuthServiceImpl implements AuthService {
                 String redirectUri = redirectRepository.findByState(state);
 
                 // If the redirect_uri is found, send the JWT to the FE
-                OidcUser oidcUser = (OidcUser) user;    // Temporary use JWT from Google
                 if (redirectUri != null) {
-                    webClient.post()
-                            .uri(redirectUri)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .bodyValue(oidcUser.getIdToken())
-                            .retrieve();
-
+                    URI uri = UriComponentsBuilder
+                            .fromUriString(redirectUri)
+                            .queryParam("token", ((OidcUser) user).getIdToken().getTokenValue())    // TODO: generate JWT
+                            .build()
+                            .toUri();
                     redirectRepository.removeByState(state);
-
-                    response.sendRedirect(redirectUri); // optional; FE will probably close the window
+                    response.sendRedirect(uri.toString()); // optional; FE will probably close the window
                 }
             }
         }
@@ -86,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
      * @param user     the OAuth2 returned by the {@link OAuth2User}
      * @param provider the provider name
      */
-    private Account registerIfNeed(OAuth2User user, String provider) throws Exception {
+    private void registerIfNeed(OAuth2User user, String provider) throws Exception {
         String email = user.getAttribute("email");
         Assert.notNull(email, "Cannot obtain email from OAuth2");
 
@@ -113,14 +110,12 @@ public class AuthServiceImpl implements AuthService {
             String picture = user.getAttribute("picture");
 
             // Register a new account
-            account = Optional.of(
-                    registerNewAccount(
-                            email,
-                            firstName,
-                            middleName,
-                            lastName,
-                            picture
-                    )
+            registerNewAccount(
+                    email,
+                    firstName,
+                    middleName,
+                    lastName,
+                    picture
             );
         }
 
@@ -136,17 +131,15 @@ public class AuthServiceImpl implements AuthService {
             accountProviderEntity.setId(key);
             accountProviderRepository.save(accountProviderEntity);
         }
-
-        return account.get();
     }
 
-    private Account registerNewAccount(
+    private void registerNewAccount(
             String email,
             String firstName,
             String middleName,
             String lastName,
             String picture
-    ) throws Exception {
+    ) {
         // Save account
         Set<Role> roles = Set.of(roleRepository.findById("USER").orElseThrow());
         Account account = Account.builder()
@@ -165,11 +158,9 @@ public class AuthServiceImpl implements AuthService {
                 .picture(picture)
                 .build();
         sendUserInfo(userInput);
-
-        return account;
     }
 
-    private void sendUserInfo(UserInput userInput) throws Exception {
+    private void sendUserInfo(UserInput userInput) {
         // TODO: Send user info to User service
         System.out.println("Sending " + userInput);
     }
