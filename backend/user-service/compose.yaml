@@ -1,0 +1,31 @@
+services:
+
+  #  user-service:
+  #    build:
+  #      context: .
+  #    env_file:
+  #      - path: ./env/docker.env
+  #    ports:
+  #      - 8080:8080
+  #    depends_on:
+  #      user-db:
+  #        condition: service_healthy
+
+  user-db:
+    env_file:
+      - path: ./env/docker.env
+    image: postgres
+    restart: always
+    user: postgres
+    volumes:
+      - user-data:/var/lib/postgresql/data
+    ports:
+      - 5434:5432
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  user-data:
