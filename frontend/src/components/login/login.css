@@ -1,0 +1,79 @@
+.navbar__menu-sign-in-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 50px;
+    background-color: #A1CCE4;
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    width: 350px;
+    height: 500px;
+}
+.navbar__menu-sign-in-form #close-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+.navbar__menu-sign-in-form img {
+    width: 100px;
+    height: auto;
+    margin: 5px auto;
+}
+.navbar__menu-sign-in-form h2 {
+    font-size: 24px;
+    text-align: center;
+    padding: 5px;
+}
+.navbar__menu-sign-in-form p {
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+    padding: 5px;
+}
+.navbar__menu-sign-in-form__icon-container {
+    background-color: #042c54;
+    width: 100%;
+    height: 37px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #A1CCE4;
+    padding: 2px;
+    margin: 10px 0;
+    position: relative;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid #042c54;
+}
+.navbar__menu-sign-in-form__icon-container:hover {
+    background-color: #A1CCE4;
+    color: #042c54;
+    border: 2px solid #042c54;
+}
+.navbar__menu-sign-in-form__icon-inner-container {
+    position: absolute;
+    height: 30px;
+    width: auto;
+    background-color: white;
+    border-radius: 20px;
+    left: 2.5px;
+}
+.navbar__menu-sign-in-form__icon-inner-container svg {
+    width: auto;
+    height: 100%;
+}
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+}

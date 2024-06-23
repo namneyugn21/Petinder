@@ -42,8 +42,7 @@ out/
 env/
 
 # Front-end
-# dependencies
-/node_modules
+node_modules/
 /.pnp
 .pnp.js
 
