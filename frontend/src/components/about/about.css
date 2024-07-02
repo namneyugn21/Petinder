@@ -31,7 +31,7 @@
 .about {
     display: flex;
     flex-direction: row;
-    padding: calc(150px + 10vh) 180px;
+    padding: 150px 180px;
     height: 100vh;
     background-color: white;
 }
@@ -121,7 +121,7 @@
 
 @media screen and (max-width: 1200px) {
     .about {
-        padding: calc(150px + 10vh) 180px 100px 180px;
+        padding: 100px 180px 100px 180px;
     }
     .about__title {
         padding-top: 120px;
@@ -133,7 +133,7 @@
 }
 @media screen and (max-width: 1000px) {
     .about {
-        padding: calc(150px + 10vh) 130px 100px 130px;
+        padding: 100px 130px 100px 130px;
     }
     .about__title {
         padding-top: 120px;
@@ -159,7 +159,7 @@
 }
 @media screen and (max-width: 800px) {
     .about {
-        padding: calc(150px + 10vh) 80px 100px 80px;
+        padding: 100px 80px 100px 80px;
     }
     .about__title {
         padding-top: 120px;
@@ -185,7 +185,7 @@
 }
 @media screen and (max-width: 700px) {
     .about {
-        padding: calc(150px + 10vh) 80px 100px 80px;
+        padding: 100px 80px 100px 80px;
     }
     .about__title {
         padding-top: 120px;
@@ -211,7 +211,7 @@
 }
 @media screen and (max-width: 600px) {
     .about {
-        padding: calc(200px + 10vh) 30px 100px 30px;
+        padding: 100px 30px 100px 30px;
         flex-direction: column;
         justify-content: center;
     }

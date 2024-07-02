@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RiMenu3Line, RiCloseLine } from 'react-icons/ri';
 import { PiPawPrintFill } from "react-icons/pi";
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate, useHis } from 'react-router-dom';
 import './navbar.css';
 import logo from '../../assets/logo.png';
 import Login from '../login/Login';
@@ -24,14 +24,31 @@ const Menu = () => (
 );
 
 const Navbar = () => {
-    const [isToggleMenuVisible, setisToggleMenuVisible] = useState(false);
+    const [isToggleMenuVisible, setIsToggleMenuVisible] = useState(false);
     const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
     const [isFadingOut, setIsFadingOut] = useState(false);
     const [isToggleButtonVisible, setIsToggleButtonVisible] = useState(false);
+    const [isSignedIn, setIsSignedIn] = React.useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            setIsSignedIn(true);
+        }
+    }, []);
+
+    const signOut = () => {
+        localStorage.removeItem('token');
+        setIsSignedIn(false);
+        navigate('/');
+        window.location.reload();
+    };
 
     const toggleLoginForm = () => {
         if (isLoginFormVisible) {
             setIsFadingOut(true);
+            setIsToggleButtonVisible(false);
             setTimeout(() => {
                 setIsLoginFormVisible(false);
                 setIsFadingOut(false);
@@ -46,11 +63,11 @@ const Navbar = () => {
             setIsFadingOut(true);
             setIsToggleButtonVisible(false);
             setTimeout(() => {
-                setisToggleMenuVisible(false);
+                setIsToggleMenuVisible(false);
                 setIsFadingOut(false);
             }, 250);
         } else {
-            setisToggleMenuVisible(true);
+            setIsToggleMenuVisible(true);
             setIsToggleButtonVisible(true);
         }
     };
@@ -69,11 +86,20 @@ const Navbar = () => {
             </NavLink>
             <div className='navbar__menu ibm-plex-mono-regular'>
                 <Menu />
-                <div className='navbar__menu-item'>
-                    <button className='navbar__menu-button ibm-plex-mono-regular' type='button' onClick={toggleLoginForm}>
-                        Sign In
-                    </button>
-                </div>
+                {isSignedIn ? (
+                    <div className='navbar__menu-item'>
+                        <button className='navbar__menu-button ibm-plex-mono-regular' type='button' onClick={signOut}>
+                            Sign Out
+                        </button>
+                    </div>
+                ) : (
+                    <div className='navbar__menu-item'>
+                        <button className='navbar__menu-button ibm-plex-mono-regular' type='button' onClick={toggleLoginForm}>
+                            Sign In
+                        </button>
+                    </div>
+                
+                )}
             </div>
 
             {/* Adding sign in form */}
@@ -92,9 +118,15 @@ const Navbar = () => {
                         <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}><a href='#about'>About</a></div>
                         <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}><a href='#discover'>Discover</a></div>
                         <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}><a href='#safety'>Safety</a></div>  
-                        <div className='navbar__menu-item tracking-in-expand'>
-                            <button className='navbar__menu-button ibm-plex-mono-regular tracking-in-expand' type='button' onClick={() => {toggleLoginForm(); setisToggleMenuVisible(false);}}>Sign In</button>
-                        </div>  
+                        {isSignedIn ? (
+                            <div className='navbar__menu-item tracking-in-expand'>
+                                <button className='navbar__menu-button ibm-plex-mono-regular tracking-in-expand' type='button' onClick={() => {signOut(); setIsToggleMenuVisible(false);}}>Sign Out</button>
+                            </div>  
+                        ) : (
+                            <div className='navbar__menu-item tracking-in-expand'>
+                                <button className='navbar__menu-button ibm-plex-mono-regular tracking-in-expand' type='button' onClick={() => {toggleLoginForm(); setIsToggleMenuVisible(false);}}>Sign In</button>
+                            </div>
+                        )}
                     </div>
                     )
                 }

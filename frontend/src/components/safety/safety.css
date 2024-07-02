@@ -1,6 +1,6 @@
 .safety {
     background-color: #042c54;
-    padding: calc(0px + 10vh) 180px 100px 180px;
+    padding: 100px 180px 100px 180px;
 }
 .safety__container {
     width: 100%;
@@ -37,15 +37,15 @@
 }
 @media screen and (max-width: 2000px) {
     .safety {
-        padding: calc(0px + 13vh) 180px 100px 180px;
+        padding: 100px 180px 100px 180px;
     }
 }
 @media screen and (max-width: 1200px) {
     .safety {
-        padding: calc(0px + 13vh) 100px 100px 100px;
+        padding: 100px 180px 100px 180px;
     }
     .safety__content {
-        column-gap: 50px;
+        column-gap: 100px;
     }
     .safety__content__item {
         flex: 1 1 250px;
@@ -57,10 +57,10 @@
 }
 @media screen and (max-width: 1000px) {
     .safety {
-        padding: calc(0px + 13vh) 80px 100px 80px;
+        padding: 100px 130px 100px 130px;
     }
     .safety__content {
-        column-gap: 40px;
+        column-gap: 100px;
     }
     .safety__content__item {
         flex: 1 1 200px;
@@ -72,7 +72,7 @@
 }
 @media screen and (max-width: 800px) {
     .safety {
-        padding: calc(0px + 9vh) 50px 100px 50px;
+        padding: 100px 80px 100px 80px;
     }
     .safety__title {
         font-size: 25px;
@@ -96,7 +96,7 @@
 }
 @media screen and (max-width: 700px) {
     .safety {
-        padding: calc(0px + 9vh) 50px 100px 50px;
+        padding: 100px 80px 100px 80px;
     }
     .safety__title {
         font-size: 25px;
@@ -120,7 +120,7 @@
 }
 @media screen and (max-width: 600px) {
     .safety {
-        padding: calc(0px + 9vh) 50px 100px 50px;
+        padding: 100px 30px 100px 30px;
     }
     .safety__title {
         font-size: 25px;

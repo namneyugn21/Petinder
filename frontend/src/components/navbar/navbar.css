@@ -38,8 +38,8 @@ a {
     padding: 25px 50px;
     color: #042c54;
     align-items: center;
-    min-height: 10vh;
-    position: fixed;
+    height: 15vh;
+    position: relative;
     z-index: 10;
     width: 100%;
 }
@@ -58,13 +58,13 @@ a {
     font-size: 17px;
     gap: 35px;
     align-items: center;
-    cursor: pointer;
 }
 
 .navbar__menu-item {
     position: relative;
     display: flex;
     flex-direction: column;
+    cursor: pointer;
 }
 
 .navbar__menu-item:hover svg {
