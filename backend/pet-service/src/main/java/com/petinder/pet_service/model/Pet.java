@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.petinder.userservice.model.User;
 
 @Data
 @Entity
@@ -24,4 +25,8 @@ public class Pet {
 
     @Embedded
     private PetProperty property;
+
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
+
+import com.petinder.pet_service.model.Pet;
 
 @Data
 @Entity(name = "users")
@@ -27,4 +30,11 @@ public class User implements Serializable {
 
     @Column(name = "picture")
     private String picture;
+
+    @Column(name = "shelter", nullable = false)
+    private boolean shelter;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pet> pets;
+    
 }
