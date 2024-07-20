@@ -11,6 +11,9 @@ import com.petinder.pet_service.dto.read.ReadPetOutput;
 import com.petinder.pet_service.dto.update.UpdatePetInput;
 import com.petinder.pet_service.dto.update.UpdatePetOutput;
 
+import java.util.List;
+import java.util.UUID;
+
 public interface PetService {
     CreatePetOutput createPet(CreatePetInput createPetInput);
 
@@ -21,4 +24,6 @@ public interface PetService {
     UpdatePetOutput updatePet(UpdatePetInput updatePetInput);
 
     DeletePetOutput deletePet(DeletePetInput deletePetInput);
+
+    List<ReadPetOutput> readPetBulk(List<UUID> petIds);
 }

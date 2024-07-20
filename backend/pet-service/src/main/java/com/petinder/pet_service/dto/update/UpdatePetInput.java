@@ -5,12 +5,14 @@ import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 public class UpdatePetInput {
     @Min(0)
     private double weight;
-    private String id;
+    private UUID id;
     private String name;
     private String picture;
     private PetProperty.Age age;

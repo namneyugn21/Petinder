@@ -8,23 +8,26 @@ import lombok.Data;
 
 @Data
 public class CreatePetInput {
-    @NotEmpty
+    @NotEmpty(message = "Pet's name cannot be empty")
     private String name;
+
+    @NotEmpty(message = "Pet must be own by someone, either a shelter or a user")
+    private String ownerId;
 
     private String picture;
 
     @NotNull
     private PetProperty.Age age;
 
-    @Min(0)
+    @Min(value = 0, message = "Pet's weight cannot be less than 0")
     private double weight;
 
-    @NotEmpty
+    @NotEmpty(message = "Pet's breed cannot be empty")
     private String breed;
 
-    @NotEmpty
+    @NotEmpty(message = "Pet's fur color cannot be empty")
     private String furColor;
 
-    @NotEmpty
+    @NotEmpty(message = "Pet's eye color cannot be empty")
     private String eyeColor;
 }

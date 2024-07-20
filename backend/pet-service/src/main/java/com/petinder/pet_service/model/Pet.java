@@ -5,7 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -19,6 +22,9 @@ public class Pet {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "owner_id", nullable = false)
+    private UUID ownerId;            // user currently own the pet: user has type shelter if the pet is not adopted
+
     @Column(nullable = false)
     private String name;
 
@@ -27,6 +33,12 @@ public class Pet {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
+
+    @CreationTimestamp
+    private Instant createAt;
+
+    @UpdateTimestamp
+    private Instant updateAt;
 
     @Embedded
     private PetProperty property;
