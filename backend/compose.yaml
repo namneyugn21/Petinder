@@ -1,6 +1,20 @@
 services:
+  ### API GATEWAY ###
+  gate-service:
+    restart: on-failure
+    build:
+      context: ./gateway
+    expose:
+      - 80:8080
+    depends_on:
+      - auth-service
+      - user-service
+      - pet-service
+  ### API GATEWAY ###
+  
   ### AUTH SERVICE ###
   auth-service:
+    restart: on-failure
     build:
       context: ./auth-service
     env_file:
@@ -29,6 +43,7 @@ services:
 
   ### PET SERVICE ###
   pet-service:
+    restart: on-failure
     build:
       context: ./pet-service
     env_file:
@@ -57,6 +72,7 @@ services:
 
   ### USER SERVICE ###
   user-service:
+    restart: on-failure
     build:
       context: ./user-service
     env_file:
