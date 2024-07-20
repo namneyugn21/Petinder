@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 # Stage 1: Build the application
 FROM gradle:8.8.0-jdk17 AS build
 
