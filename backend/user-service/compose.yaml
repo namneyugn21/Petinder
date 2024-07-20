@@ -1,22 +1,20 @@
 services:
-
-  #  user-service:
-  #    build:
-  #      context: .
-  #    env_file:
-  #      - path: ./env/docker.env
-  #    ports:
-  #      - 8080:8080
-  #    depends_on:
-  #      user-db:
-  #        condition: service_healthy
+#  user-service:
+#    build:
+#      context: .
+#    env_file:
+#      - path: ./env/docker.env
+#    expose:
+#      - 8080
+#    depends_on:
+#      user-db:
+#        condition: service_healthy
 
   user-db:
+    image: postgres:16.3
+    restart: always
     env_file:
       - path: ./env/docker.env
-    image: postgres
-    restart: always
-    user: postgres
     volumes:
       - user-data:/var/lib/postgresql/data
     ports:

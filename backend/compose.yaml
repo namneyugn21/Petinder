@@ -1,0 +1,89 @@
+services:
+  ### AUTH SERVICE ###
+  auth-service:
+    build:
+      context: ./auth-service
+    env_file:
+      - path: ./auth-service/env/docker.env
+    expose:
+      - 8080
+    depends_on:
+      auth-db:
+        condition: service_healthy
+
+  auth-db:
+    image: postgres:16.3
+    restart: always
+    env_file:
+      - path: ./auth-service/env/docker.env
+    volumes:
+      - auth-data:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  ### AUTH SERVICE ###
+
+  ### PET SERVICE ###
+  pet-service:
+    build:
+      context: ./pet-service
+    env_file:
+      - path: ./pet-service/env/docker.env
+    expose:
+      - 8080
+    depends_on:
+      pet-db:
+        condition: service_healthy
+
+  pet-db:
+    image: postgres:16.3
+    restart: always
+    env_file:
+      - path: ./pet-service/env/docker.env
+    volumes:
+      - pet-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  ### PET SERVICE ###
+
+  ### USER SERVICE ###
+  user-service:
+    build:
+      context: ./user-service
+    env_file:
+      - path: ./user-service/env/docker.env
+    expose:
+      - 8080
+    depends_on:
+      user-db:
+        condition: service_healthy
+
+  user-db:
+    image: postgres:16.3
+    restart: always
+    env_file:
+      - path: ./user-service/env/docker.env
+    volumes:
+      - user-data:/var/lib/postgresql/data
+    ports:
+      - 5434:5432
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  ### USER SERVICE ###
+
+volumes:
+  auth-data:
+  user-data:
+  pet-data:
