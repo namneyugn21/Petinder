@@ -7,10 +7,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
-import com.petinder.pet_service.model.Pet;
 
 @Data
-@Entity(name = "users")
+@Entity
+@Table(name = "users")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,7 +34,10 @@ public class User implements Serializable {
     @Column(name = "shelter", nullable = false)
     private boolean shelter;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ElementCollection
+    @CollectionTable(
+            name = "user_pet",
+            joinColumns = @JoinColumn(name = "user_id")
+    )
     private List<Pet> pets;
-    
 }
