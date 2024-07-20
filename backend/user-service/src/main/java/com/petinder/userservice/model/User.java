@@ -2,8 +2,11 @@ package com.petinder.userservice.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +16,7 @@ import java.util.UUID;
 @Table(name = "users")
 public class User implements Serializable {
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
@@ -28,11 +32,19 @@ public class User implements Serializable {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "picture")
+    @Column(name = "user_picture")
     private String picture;
 
     @Column(name = "shelter", nullable = false)
-    private boolean shelter;
+    private boolean isShelter;
+
+    @UpdateTimestamp
+    @Column(name = "update_at", nullable = false)
+    private Instant updateAt;
+
+    @CreationTimestamp
+    @Column(name = "create_at", nullable = false, updatable = false)
+    private Instant createAt;
 
     @ElementCollection
     @CollectionTable(
