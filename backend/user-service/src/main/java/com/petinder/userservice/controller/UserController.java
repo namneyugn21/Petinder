@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("${spring.application.api-prefix}")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;

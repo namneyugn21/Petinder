@@ -1,9 +1,10 @@
 server:
-  port: 8082
+  port: 8080
 
 spring:
   application:
     name: pet-service
+    api-prefix: /pet
 
   datasource:
     url: ${POSTGRES_URL}
@@ -15,21 +16,13 @@ spring:
       ddl-auto: update
 
 springdoc:
+  api-docs:
+    path: '${spring.application.api-prefix}/v3/api-docs'
   swagger-ui:
     operationsSorter: method
     try-it-out-enabled: true
-  writer-with-order-by-keys: true
+    path: '${spring.application.api-prefix}/swagger-ui.html'
 
 logging:
   level:
     org.hibernate.SQL: DEBUG
-
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8079/eureka/
-
-  instance:
-    hostname: localhost

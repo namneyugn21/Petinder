@@ -39,12 +39,12 @@ springdoc:
     operationsSorter: method
     try-it-out-enabled: true
     urls:
-      - url: /auth/v3/api-docs
-        name: Auth Service
-      - url: /user/v3/api-docs
-        name: User Service
       - url: /pet/v3/api-docs
         name: Pet Service
+      - url: /user/v3/api-docs
+        name: User Service
+      - url: /auth/v3/api-docs
+        name: Auth Service
 
 logging:
   level:

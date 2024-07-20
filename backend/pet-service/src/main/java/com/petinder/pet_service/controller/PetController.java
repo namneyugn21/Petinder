@@ -21,7 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/pet")
+@RequestMapping("${spring.application.api-prefix}")
 @RequiredArgsConstructor
 public class PetController {
     private final PetService petService;

@@ -1,6 +1,12 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /auth
+
 spring:
   application:
-    name: auth_service
+    name: auth-service
+#    api-prefix: /auth
 
   datasource:
     url: ${POSTGRES_URL}
@@ -23,8 +29,13 @@ spring:
     hibernate:
       ddl-auto: create-drop
 
-server:
-  port: 8083
+springdoc:
+#  api-docs:
+#    path: '${spring.application.api-prefix}/v3/api-docs'
+  swagger-ui:
+    operationsSorter: method
+    try-it-out-enabled: true
+#    path: '${spring.application.api-prefix}/swagger-ui.html'
 
 logging:
   level:
