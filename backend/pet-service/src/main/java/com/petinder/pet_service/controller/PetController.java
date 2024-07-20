@@ -51,7 +51,7 @@ public class PetController {
 
     @GetMapping
     public ResponseDTO<ListPetOutput> listPet(
-            @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable
+            @ParameterObject @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable
     ) {
         ListPetInput listPetInput = new ListPetInput(pageable);
         ListPetOutput listPetOutput = petService.listPet(listPetInput);
