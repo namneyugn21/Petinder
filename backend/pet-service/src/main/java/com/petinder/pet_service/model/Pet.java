@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.petinder.userservice.model.User;
+
+import java.util.UUID;
 
 @Data
 @Entity
@@ -16,17 +17,23 @@ import com.petinder.userservice.model.User;
 public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     @Column(nullable = false)
     private String name;
 
     private String picture;
 
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private Status status;
+
     @Embedded
     private PetProperty property;
 
-    @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    public enum Status {
+        ADOPTED,    // already adopted
+        BOOKED,     // booked by someone to be seen?
+        FREE        // free to be booked
+    }
 }
