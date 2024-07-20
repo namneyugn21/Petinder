@@ -14,6 +14,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface PetMapper {
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "createAt", ignore = true)
+    @Mapping(target = "updateAt", ignore = true)
     @Mapping(target = "property.age", source = "age")
     @Mapping(target = "property.weight", source = "weight")
     @Mapping(target = "property.breed", source = "breed")
@@ -21,7 +24,6 @@ public interface PetMapper {
     @Mapping(target = "property.eyeColor", source = "eyeColor")
     Pet createPetInputToPet(CreatePetInput createPetInput);
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "age", source = "property.age")
     @Mapping(target = "weight", source = "property.weight")
     @Mapping(target = "breed", source = "property.breed")
@@ -36,6 +38,8 @@ public interface PetMapper {
     @Mapping(target = "eyeColor", source = "property.eyeColor")
     ReadPetOutput petToReadPetOutput(Pet pet);
 
+    @Mapping(target = "createAt", ignore = true)
+    @Mapping(target = "updateAt", ignore = true)
     @Mapping(target = "property.age", source = "age")
     @Mapping(target = "property.weight", source = "weight")
     @Mapping(target = "property.breed", source = "breed")
@@ -53,7 +57,7 @@ public interface PetMapper {
 
     @Mapping(target = "pets", source = "readPetOutputs")
     @Mapping(target = "nextPage", source = "nextPage")
-    @Mapping(target = "size", source = "size")
+    @Mapping(target = "nextSize", source = "nextSize")
     @Mapping(target = "totalPage", source = "totalPage")
-    ListPetOutput toListPetOutput(List<ReadPetOutput> readPetOutputs, int nextPage, int size, int totalPage);
+    ListPetOutput toListPetOutput(List<ReadPetOutput> readPetOutputs, int nextPage, int nextSize, int totalPage);
 }

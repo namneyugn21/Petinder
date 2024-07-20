@@ -1,4 +1,4 @@
-package com.petinder.userservice.dto.update;
+package com.petinder.userservice.dto.user.update;
 
 import lombok.Data;
 

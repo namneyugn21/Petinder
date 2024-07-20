@@ -1,11 +1,9 @@
 package com.petinder.userservice.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -13,8 +11,9 @@ import java.util.UUID;
 
 @Data
 @Entity
-@IdClass(UserPet.class)
-public class UserPet implements Serializable {
+@Table(name = "user_pet")
+@IdClass(PetKey.class)
+public class Pet implements Serializable, Persistable<PetKey> {
     @Id
     @Column(name = "user_id")
     private UUID userId;
@@ -24,4 +23,24 @@ public class UserPet implements Serializable {
 
     @CreationTimestamp
     private Instant creatAt;
+
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+    @Override
+    public PetKey getId() {
+        return new PetKey(this.userId, this.petId);
+    }
+
+    /**
+     * This is to prevent JPA update.
+     * Always return true make JPA always uses insert instead of update
+     *
+     * @return always return true
+     */
+    @Override
+    public boolean isNew() {
+        return true;
+    }
 }

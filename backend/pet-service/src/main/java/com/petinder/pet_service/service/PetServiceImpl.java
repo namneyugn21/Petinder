@@ -11,14 +11,15 @@ import com.petinder.pet_service.dto.read.ReadPetOutput;
 import com.petinder.pet_service.dto.update.UpdatePetInput;
 import com.petinder.pet_service.dto.update.UpdatePetOutput;
 import com.petinder.pet_service.exception.PetNotFound;
+import com.petinder.pet_service.invoker.UserServiceInvoker;
 import com.petinder.pet_service.mapper.PetMapper;
 import com.petinder.pet_service.model.Pet;
 import com.petinder.pet_service.repository.PetRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,13 +27,19 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class PetServiceImpl implements PetService {
-    private final WebClient webClient;
     private final PetMapper petMapper;
     private final PetRepository petRepository;
+    private final UserServiceInvoker userServiceInvoker;
 
+    @Transactional
     public CreatePetOutput createPet(CreatePetInput createPetInput) {
         Pet pet = petMapper.createPetInputToPet(createPetInput);
+        pet.setStatus(Pet.Status.FREE);
         pet = petRepository.save(pet);
+
+        // Call User Service to register the pet to the owner
+        userServiceInvoker.registerPet(pet.getOwnerId(), pet.getId());
+
         return petMapper.petToCreatePetOutput(pet);
     }
 

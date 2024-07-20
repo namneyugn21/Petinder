@@ -6,13 +6,15 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class CreatePetInput {
     @NotEmpty(message = "Pet's name cannot be empty")
     private String name;
 
-    @NotEmpty(message = "Pet must be own by someone, either a shelter or a user")
-    private String ownerId;
+    @NotNull(message = "Pet must be own by someone, either a shelter or a user")
+    private UUID ownerId;
 
     private String picture;
 

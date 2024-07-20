@@ -1,4 +1,4 @@
-package com.petinder.userservice.dto.delete;
+package com.petinder.userservice.dto.user.delete;
 
 import lombok.Builder;
 import lombok.Data;

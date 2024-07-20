@@ -1,5 +1,6 @@
 package com.petinder.pet_service.dto.update;
 
+import com.petinder.pet_service.model.Pet;
 import com.petinder.pet_service.model.PetProperty;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,8 @@ public class UpdatePetInput {
     @Min(0)
     private double weight;
     private UUID id;
+    private UUID ownerId;
+    private Pet.Status status;
     private String name;
     private String picture;
     private PetProperty.Age age;

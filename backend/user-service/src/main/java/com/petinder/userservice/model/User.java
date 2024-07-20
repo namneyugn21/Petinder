@@ -45,11 +45,4 @@ public class User implements Serializable {
     @CreationTimestamp
     @Column(name = "create_at", nullable = false, updatable = false)
     private Instant createAt;
-
-    @ElementCollection
-    @CollectionTable(
-            name = "user_pet",
-            joinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<Pet> pets;
 }

@@ -1,6 +1,6 @@
-package com.petinder.userservice.dto.list;
+package com.petinder.userservice.dto.user.list;
 
-import com.petinder.userservice.dto.read.ReadUserOutput;
+import com.petinder.userservice.dto.user.read.ReadUserOutput;
 import lombok.Data;
 
 import java.util.List;

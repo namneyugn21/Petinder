@@ -2,11 +2,11 @@ server:
   port: 8080
   servlet:
     context-path: /auth
+  forward-headers-strategy: native
 
 spring:
   application:
     name: auth-service
-#    api-prefix: /auth
 
   datasource:
     url: ${POSTGRES_URL}
@@ -30,8 +30,8 @@ spring:
       ddl-auto: create-drop
 
 springdoc:
-#  api-docs:
-#    path: '${spring.application.api-prefix}/v3/api-docs'
+  #  api-docs:
+  #    path: '${spring.application.api-prefix}/v3/api-docs'
   swagger-ui:
     operationsSorter: method
     try-it-out-enabled: true

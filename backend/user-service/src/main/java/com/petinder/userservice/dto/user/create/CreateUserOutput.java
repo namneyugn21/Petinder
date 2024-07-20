@@ -1,4 +1,4 @@
-package com.petinder.userservice.dto.create;
+package com.petinder.userservice.dto.user.create;
 
 import lombok.Data;
 

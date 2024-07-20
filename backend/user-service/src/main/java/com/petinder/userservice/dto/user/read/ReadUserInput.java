@@ -1,4 +1,4 @@
-package com.petinder.userservice.dto.read;
+package com.petinder.userservice.dto.user.read;
 
 import lombok.Builder;
 import lombok.Data;
