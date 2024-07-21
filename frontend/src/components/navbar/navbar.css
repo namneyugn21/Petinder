@@ -294,7 +294,6 @@ a {
         display: flex;
         justify-content: space-between;
         min-height: 10vh;
-        position: fixed;
     }
 
     .navbar__menu {

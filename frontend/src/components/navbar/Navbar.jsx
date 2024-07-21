@@ -68,7 +68,7 @@ const Navbar = () => {
                 </div>
             </NavLink>
             <div className='navbar__menu ibm-plex-mono-regular'>
-                <div className='navbar__menu-item'>
+                <div className='navbar__menu-item' onClick={() => navigate('/')}>
                     <a href='#about'>About</a>
                     <PiPawPrintFill size={15} className='fade-in' />
                 </div>
@@ -79,7 +79,7 @@ const Navbar = () => {
                     </div>
                 ) : null
                 }
-                <div className='navbar__menu-item'>
+                <div className='navbar__menu-item' onClick={() => navigate('/')}>
                     <a href='#safety'>Safety</a>
                     <PiPawPrintFill size={15} className='fade-in' />
                 </div>  
@@ -112,11 +112,11 @@ const Navbar = () => {
                 { // Adding mobile menu dropdown
                     isToggleMenuVisible && (
                     <div className={`navbar__menu-dropdown ${isFadingOut ? 'fade-out' : 'fade-in'} ibm-plex-mono-regular`}>
-                        <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}><a href='#about'>About</a></div>
+                        <div className='navbar__menu-item tracking-in-expand' onClick={() => navigate('/')}><a href='#about'>About</a></div>
                         <div className='navbar__menu-item tracking-in-expand' onClick={() => navigate('/user')}>
                             Profile
                         </div>
-                        <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}><a href='#safety'>Safety</a></div>  
+                        <div className='navbar__menu-item tracking-in-expand' onClick={() => navigate('/')}><a href='#safety'>Safety</a></div>  
                         {isSignedIn ? (
                             <div className='navbar__menu-item tracking-in-expand'>
                                 <button className='navbar__menu-button ibm-plex-mono-regular tracking-in-expand' type='button' onClick={() => {signOut(); setIsToggleMenuVisible(false);}}>Sign Out</button>
