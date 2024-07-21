@@ -19,7 +19,7 @@ const Login = ({ isLoginFormVisible, toggleLoginForm, isFadingOut }) => {
                             <div className='navbar__menu-sign-in-form__icon-inner-container'>
                                 <FcGoogle />
                             </div>
-                            <a className='inter__medium' href='http://34.134.180.221/auth/oauth2/authorization/google?redirect_uri=http://petinder-green.vercel.app/success'>Google Account</a>
+                            <a className='inter__medium' href='http://petinder.bao2803.co/auth/oauth2/authorization/google?redirect_uri=https://petinder-green.vercel.app/'>Google Account</a>
                         </button>
                         <div className='navbar__menu-sign-in-form__icon-container '>
                             <div className='navbar__menu-sign-in-form__icon-inner-container'>
