@@ -9,7 +9,7 @@ const Home = () => {
         <>
             <Navbar/>
             <About/>
-            <Safety />
+            <Safety/>
         </>
     )
 }
