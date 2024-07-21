@@ -1,27 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { RiMenu3Line, RiCloseLine } from 'react-icons/ri';
 import { PiPawPrintFill } from "react-icons/pi";
-import { NavLink, useNavigate, useHis } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './navbar.css';
 import logo from '../../assets/logo.png';
 import Login from '../login/Login';
-
-const Menu = () => (
-    <>
-        <div className='navbar__menu-item'>
-            <a href='#about'>About</a>
-            <PiPawPrintFill size={15} className='fade-in' />
-        </div>
-        <div className='navbar__menu-item'>
-            <a href='#discover'>Discover</a>
-            <PiPawPrintFill size={15} className='fade-in' />
-        </div>
-        <div className='navbar__menu-item'>
-            <a href='#safety'>Safety</a>
-            <PiPawPrintFill size={15} className='fade-in' />
-        </div>  
-    </>
-);
 
 const Navbar = () => {
     const [isToggleMenuVisible, setIsToggleMenuVisible] = useState(false);
@@ -85,7 +68,21 @@ const Navbar = () => {
                 </div>
             </NavLink>
             <div className='navbar__menu ibm-plex-mono-regular'>
-                <Menu />
+                <div className='navbar__menu-item'>
+                    <a href='#about'>About</a>
+                    <PiPawPrintFill size={15} className='fade-in' />
+                </div>
+                {isSignedIn ? (
+                    <div className='navbar__menu-item' onClick={() => navigate('/user')}>
+                        Profile
+                        <PiPawPrintFill size={15} className='fade-in' />
+                    </div>
+                ) : null
+                }
+                <div className='navbar__menu-item'>
+                    <a href='#safety'>Safety</a>
+                    <PiPawPrintFill size={15} className='fade-in' />
+                </div>  
                 {isSignedIn ? (
                     <div className='navbar__menu-item'>
                         <button className='navbar__menu-button ibm-plex-mono-regular' type='button' onClick={signOut}>
@@ -116,7 +113,9 @@ const Navbar = () => {
                     isToggleMenuVisible && (
                     <div className={`navbar__menu-dropdown ${isFadingOut ? 'fade-out' : 'fade-in'} ibm-plex-mono-regular`}>
                         <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}><a href='#about'>About</a></div>
-                        <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}><a href='#discover'>Discover</a></div>
+                        <div className='navbar__menu-item tracking-in-expand' onClick={() => navigate('/user')}>
+                            Profile
+                        </div>
                         <div className='navbar__menu-item tracking-in-expand' onClick={() => toggleMenu()}><a href='#safety'>Safety</a></div>  
                         {isSignedIn ? (
                             <div className='navbar__menu-item tracking-in-expand'>

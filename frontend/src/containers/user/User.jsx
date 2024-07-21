@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Navbar } from '../../components'
+import React, {useState, useEffect } from 'react'
 
 const User = () => {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+
     return (
-        <>
-            <Navbar/>
-        </>
+        <div>
+            
+        </div>
     )
 }
 
-export default User;
+export default User
