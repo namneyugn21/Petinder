@@ -1,6 +1,6 @@
 import React, {useState, useEffect } from 'react'
 import Navbar from '../../components/navbar/Navbar'
-import './user.css'
+import './User.css'
 
 const User = () => {
     const [firstName, setFirstName] = useState('');
