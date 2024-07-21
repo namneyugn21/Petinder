@@ -10,12 +10,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.support.WebExchangeBindException;
-import org.springframework.web.reactive.result.method.annotation.ResponseEntityExceptionHandler;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
 import java.util.Map;
@@ -45,11 +45,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     );
 
     @Override
-    protected Mono<ResponseEntity<Object>> handleWebExchangeBindException(
-            WebExchangeBindException e,
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException e,
             HttpHeaders headers,
             HttpStatusCode status,
-            ServerWebExchange exchange
+            WebRequest request
     ) {
         List<String> errorList = e
                 .getBindingResult()
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
         ResponseDTO<ExceptionDTO> body = ResponseDTO.error(exceptionDTO);
 
-        return handleExceptionInternal(e, body, headers, status, exchange);
+        return handleExceptionInternal(e, body, headers, status, request);
     }
 
 

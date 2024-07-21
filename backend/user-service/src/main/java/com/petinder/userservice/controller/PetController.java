@@ -1,6 +1,5 @@
 package com.petinder.userservice.controller;
 
-import com.petinder.userservice.dto.ResponseDTO;
 import com.petinder.userservice.dto.pet.ListUserPetInput;
 import com.petinder.userservice.dto.pet.ListUserPetOutput;
 import com.petinder.userservice.dto.pet.RegisterPetInput;
@@ -34,17 +33,16 @@ public class PetController {
     }
 
     @GetMapping("/pet")
-    public ResponseDTO<ListUserPetOutput> listUserPet(
+    public ListUserPetOutput listUserPet(
             @PathVariable UUID userId,
 
             @ParameterObject
-            @PageableDefault(sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(sort = "creatAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         ListUserPetInput input = ListUserPetInput.builder()
                 .userId(userId)
                 .pageable(pageable)
                 .build();
-        ListUserPetOutput output = petService.listUserPet(input);
-        return ResponseDTO.success(output);
+        return petService.listUserPet(input);
     }
 }

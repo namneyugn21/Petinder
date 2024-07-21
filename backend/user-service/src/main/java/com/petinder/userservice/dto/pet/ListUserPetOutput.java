@@ -1,5 +1,6 @@
 package com.petinder.userservice.dto.pet;
 
+import com.petinder.userservice.dto.comm.ReadPetOutput;
 import lombok.Builder;
 import lombok.Data;
 

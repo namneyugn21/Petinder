@@ -1,4 +1,4 @@
-package com.petinder.userservice.dto.pet;
+package com.petinder.userservice.dto.comm;
 
 import lombok.Data;
 

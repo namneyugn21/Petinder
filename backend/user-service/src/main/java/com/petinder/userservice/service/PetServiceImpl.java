@@ -2,7 +2,7 @@ package com.petinder.userservice.service;
 
 import com.petinder.userservice.dto.pet.ListUserPetInput;
 import com.petinder.userservice.dto.pet.ListUserPetOutput;
-import com.petinder.userservice.dto.pet.ReadPetOutput;
+import com.petinder.userservice.dto.comm.ReadPetOutput;
 import com.petinder.userservice.dto.pet.RegisterPetInput;
 import com.petinder.userservice.exception.UserNotFound;
 import com.petinder.userservice.invoker.PetServiceInvoker;
@@ -15,9 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -55,10 +53,10 @@ public class PetServiceImpl implements PetService {
             throw new UserNotFound(userId);
         }
 
-        // Get pets' details from Pet Service using list of pet ids
+        // Get futurePets' details from Pet Service using list of pet ids
         Page<Pet> petPage = petRepository.findAllByUserId(userId, input.getPageable());
         List<UUID> petIds = petPage.get().map(Pet::getPetId).toList();
-        CompletableFuture<Mono<List<ReadPetOutput>>> futurePets = petServiceInvoker.getPets(petIds);
+        CompletableFuture<List<ReadPetOutput>> futurePets = petServiceInvoker.getPets(petIds);
 
         // Next page info
         Pageable nextPetPage = petPage.nextOrLastPageable();
@@ -66,14 +64,11 @@ public class PetServiceImpl implements PetService {
         int nextSize = nextPetPage.getPageSize();
         int totalPage = petPage.getTotalPages();
 
-        // Await pets' detail from Pet Service
         List<ReadPetOutput> pets;
         try {
-            pets = futurePets
-                    .get(30, TimeUnit.SECONDS)      // wait for api call to Pet Service to complete
-                    .block(Duration.ofSeconds(30));         // wait for the flux from Pet Service to become list
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            throw new RuntimeException("Can't get pet detail from Pet Service", e);
+            pets = futurePets.get(30, TimeUnit.SECONDS);
+        } catch (TimeoutException | InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
 
         return ListUserPetOutput.builder()
