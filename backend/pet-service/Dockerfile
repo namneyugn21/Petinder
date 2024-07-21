@@ -14,7 +14,7 @@ COPY build.gradle settings.gradle ./
 COPY ./src src/
 
 # Run gradle build
-RUN gradle bootJar --no-daemon -x test
+RUN gradle bootJar -i -x test
 
 # Stage 2: Extract the built artifact
 FROM build AS extract
