@@ -1,0 +1,29 @@
+services:
+#  auth-service:
+#    build:
+#      context: .
+#    env_file:
+#      - path: ./env/docker.env
+#    expose:
+#      - 8080
+#    depends_on:
+#      auth-db:
+#        condition: service_healthy
+
+  auth-db:
+    image: postgres:16.3
+    restart: always
+    env_file:
+      - path: ./env/docker.env
+    volumes:
+      - auth-data:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  auth-data:

@@ -12,7 +12,9 @@ import com.petinder.pet_service.dto.read.ReadPetOutput;
 import com.petinder.pet_service.dto.update.UpdatePetInput;
 import com.petinder.pet_service.dto.update.UpdatePetOutput;
 import com.petinder.pet_service.service.PetService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -20,8 +22,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.UUID;
+
 @RestController
-@RequestMapping("/api/pet")
+@RequestMapping("${spring.application.api-prefix}")
 @RequiredArgsConstructor
 public class PetController {
     private final PetService petService;
@@ -37,7 +42,7 @@ public class PetController {
 
     @GetMapping("/{petId}")
     public ResponseDTO<ReadPetOutput> readPet(
-            @PathVariable String petId
+            @PathVariable UUID petId
     ) {
         ReadPetInput readPetInput = new ReadPetInput(petId);
         ReadPetOutput readPetOutput = petService.readPet(readPetInput);
@@ -46,7 +51,7 @@ public class PetController {
 
     @GetMapping
     public ResponseDTO<ListPetOutput> listPet(
-            @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable
+            @ParameterObject @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable pageable
     ) {
         ListPetInput listPetInput = new ListPetInput(pageable);
         ListPetOutput listPetOutput = petService.listPet(listPetInput);
@@ -55,7 +60,7 @@ public class PetController {
 
     @PutMapping("/{petId}")
     public ResponseDTO<UpdatePetOutput> updatePet(
-            @PathVariable String petId,
+            @PathVariable UUID petId,
             @RequestBody @Validated UpdatePetInput updatePetInput
     ) {
         updatePetInput.setId(petId);
@@ -65,10 +70,18 @@ public class PetController {
 
     @DeleteMapping("/{petId}")
     public ResponseDTO<DeletePetOutput> deletePet(
-            @PathVariable String petId
+            @PathVariable UUID petId
     ) {
         DeletePetInput deletePetInput = new DeletePetInput(petId);
         DeletePetOutput deletePetOutput = petService.deletePet(deletePetInput);
         return ResponseDTO.success(deletePetOutput);
+    }
+
+    @Operation(summary = "Internal: Read pet in bulk")
+    @GetMapping("/internal")
+    public List<ReadPetOutput> readPetBulk(
+            @ParameterObject @RequestParam List<UUID> petIds
+    ) {
+        return petService.readPetBulk(petIds);
     }
 }

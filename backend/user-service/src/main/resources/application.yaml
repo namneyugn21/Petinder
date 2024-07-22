@@ -1,9 +1,11 @@
 server:
   port: 8080
+  forward-headers-strategy: native
 
 spring:
   application:
     name: user-service
+    api-prefix: /user
   jackson:
     serialization:
       fail-on-empty-beans: false
@@ -18,10 +20,12 @@ spring:
       ddl-auto: update
 
 springdoc:
+  api-docs:
+    path: '${spring.application.api-prefix}/v3/api-docs'
   swagger-ui:
     operationsSorter: method
     try-it-out-enabled: true
-  writer-with-order-by-keys: true
+    path: '${spring.application.api-prefix}/swagger-ui.html'
 
 logging:
   level:

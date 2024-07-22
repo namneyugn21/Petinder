@@ -1,11 +1,11 @@
 package com.petinder.userservice.mapper;
 
-import com.petinder.userservice.dto.create.CreateUserInput;
-import com.petinder.userservice.dto.create.CreateUserOutput;
-import com.petinder.userservice.dto.list.ListUserOutput;
-import com.petinder.userservice.dto.read.ReadUserOutput;
-import com.petinder.userservice.dto.update.UpdateUserInput;
-import com.petinder.userservice.dto.update.UpdateUserOutput;
+import com.petinder.userservice.dto.user.create.CreateUserInput;
+import com.petinder.userservice.dto.user.create.CreateUserOutput;
+import com.petinder.userservice.dto.user.list.ListUserOutput;
+import com.petinder.userservice.dto.user.read.ReadUserOutput;
+import com.petinder.userservice.dto.user.update.UpdateUserInput;
+import com.petinder.userservice.dto.user.update.UpdateUserOutput;
 import com.petinder.userservice.model.User;
 import org.mapstruct.*;
 

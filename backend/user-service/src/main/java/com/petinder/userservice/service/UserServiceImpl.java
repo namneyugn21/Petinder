@@ -1,15 +1,15 @@
 package com.petinder.userservice.service;
 
-import com.petinder.userservice.dto.create.CreateUserInput;
-import com.petinder.userservice.dto.create.CreateUserOutput;
-import com.petinder.userservice.dto.delete.DeleteUserInput;
-import com.petinder.userservice.dto.delete.DeleteUserOutput;
-import com.petinder.userservice.dto.list.ListUserInput;
-import com.petinder.userservice.dto.list.ListUserOutput;
-import com.petinder.userservice.dto.read.ReadUserInput;
-import com.petinder.userservice.dto.read.ReadUserOutput;
-import com.petinder.userservice.dto.update.UpdateUserInput;
-import com.petinder.userservice.dto.update.UpdateUserOutput;
+import com.petinder.userservice.dto.user.create.CreateUserInput;
+import com.petinder.userservice.dto.user.create.CreateUserOutput;
+import com.petinder.userservice.dto.user.delete.DeleteUserInput;
+import com.petinder.userservice.dto.user.delete.DeleteUserOutput;
+import com.petinder.userservice.dto.user.list.ListUserInput;
+import com.petinder.userservice.dto.user.list.ListUserOutput;
+import com.petinder.userservice.dto.user.read.ReadUserInput;
+import com.petinder.userservice.dto.user.read.ReadUserOutput;
+import com.petinder.userservice.dto.user.update.UpdateUserInput;
+import com.petinder.userservice.dto.user.update.UpdateUserOutput;
 import com.petinder.userservice.exception.UserNotFound;
 import com.petinder.userservice.mapper.UserMapper;
 import com.petinder.userservice.model.User;
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
             ReadUserInput input
     ) {
         User user = userRepository.findById(input.getUserId())
-                .orElseThrow(UserNotFound::new);
+                .orElseThrow(() -> new UserNotFound(input.getUserId()));
         return userMapper.userToReadUserOutput(user);
     }
 
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
             UpdateUserInput input
     ) {
         User user = userRepository.findById(input.getUserId())
-                .orElseThrow(UserNotFound::new);
+                .orElseThrow(() -> new UserNotFound(input.getUserId()));
         user = userMapper.updateUserInputToUser(input, user);
         user = userRepository.save(user);
         return userMapper.userToUpdateUserOutput(user);
@@ -59,7 +59,9 @@ public class UserServiceImpl implements UserService {
     public DeleteUserOutput deleteUser(
             DeleteUserInput input
     ) {
-        if (!userRepository.existsById(input.getUserId())) throw new UserNotFound();
+        if (!userRepository.existsById(input.getUserId())) {
+            throw new UserNotFound(input.getUserId());
+        }
 
         userRepository.deleteById(input.getUserId());
         return new DeleteUserOutput();

@@ -3,26 +3,50 @@ server:
 
 spring:
   application:
-    name: gateway
+    name: api-gateway
+  main:
+    web-application-type: reactive
 
   cloud:
     gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+      forwarded:
+        enabled: true
       routes:
+        - id: auth-service
+          uri: "http://auth-service:8080/"
+          predicates:
+            - Path=/auth/**
         - id: pet-service
-          uri: lb://PET-SERVICE
+          uri: "http://pet-service:8080/"
           predicates:
-            - Path=/api/pet/**
-        - id: notification-service
-          uri: lb://NOTIFICATION-SERVICE
+            - Path=/pet/**
+        - id: user-service
+          uri: "http://user-service:8080/"
           predicates:
-            - Path=/api/notification/**
+            - Path=/user/**
 
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8079/eureka
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    operationsSorter: method
+    try-it-out-enabled: true
+    urls:
+      - url: /pet/v3/api-docs
+        name: Pet Service
+      - url: /user/v3/api-docs
+        name: User Service
+      - url: /auth/v3/api-docs
+        name: Auth Service
 
-  instance:
-    hostname: localhost
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.cloud.gateway: DEBUG
