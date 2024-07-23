@@ -25,5 +25,14 @@ services:
       timeout: 5s
       retries: 5
 
+  auth-cache:
+    image: docker.io/redis:7.2.3
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - auth-data-cache:/data
+
 volumes:
   auth-data:
+  auth-data-cache:

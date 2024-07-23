@@ -35,6 +35,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  
+  auth-cache:
+    image: docker.io/redis:7.2.3
+    restart: always
+    expose:
+      - 6379
+    volumes:
+      - auth-data-cache:/data
   ### AUTH SERVICE ###
 
   ### PET SERVICE ###
@@ -97,5 +105,8 @@ services:
 
 volumes:
   auth-data:
+  auth-data-cache:
+  
   user-data:
+  
   pet-data:
