@@ -1,19 +1,20 @@
 package com.petinder.userservice.controller;
 
 import com.petinder.userservice.dto.ResponseDTO;
-import com.petinder.userservice.dto.create.CreateUserInput;
-import com.petinder.userservice.dto.create.CreateUserOutput;
-import com.petinder.userservice.dto.delete.DeleteUserInput;
-import com.petinder.userservice.dto.delete.DeleteUserOutput;
-import com.petinder.userservice.dto.list.ListUserInput;
-import com.petinder.userservice.dto.list.ListUserOutput;
-import com.petinder.userservice.dto.read.ReadUserInput;
-import com.petinder.userservice.dto.read.ReadUserOutput;
-import com.petinder.userservice.dto.update.UpdateUserInput;
-import com.petinder.userservice.dto.update.UpdateUserOutput;
+import com.petinder.userservice.dto.user.create.CreateUserInput;
+import com.petinder.userservice.dto.user.create.CreateUserOutput;
+import com.petinder.userservice.dto.user.delete.DeleteUserInput;
+import com.petinder.userservice.dto.user.delete.DeleteUserOutput;
+import com.petinder.userservice.dto.user.list.ListUserInput;
+import com.petinder.userservice.dto.user.list.ListUserOutput;
+import com.petinder.userservice.dto.user.read.ReadUserInput;
+import com.petinder.userservice.dto.user.read.ReadUserOutput;
+import com.petinder.userservice.dto.user.update.UpdateUserInput;
+import com.petinder.userservice.dto.user.update.UpdateUserOutput;
 import com.petinder.userservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("${spring.application.api-prefix}")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -68,6 +70,7 @@ public class UserController {
 
     @GetMapping
     public ResponseDTO<ListUserOutput> listUser(
+            @ParameterObject
             @PageableDefault(sort = "email", direction = Sort.Direction.ASC) Pageable pageable
     ) {
         ListUserInput input = ListUserInput.builder()

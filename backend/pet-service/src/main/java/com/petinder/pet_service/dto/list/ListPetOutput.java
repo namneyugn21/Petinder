@@ -9,6 +9,6 @@ import java.util.List;
 public class ListPetOutput {
     private List<ReadPetOutput> pets;
     private int nextPage;
-    private int size;
+    private int nextSize;
     private int totalPage;
 }
