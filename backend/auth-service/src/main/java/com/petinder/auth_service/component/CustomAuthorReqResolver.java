@@ -1,6 +1,7 @@
-package com.petinder.auth_service.service;
+package com.petinder.auth_service.component;
 
-import com.petinder.auth_service.repository.RedirectRepository;
+import com.petinder.auth_service.repository.redirect.RedirectRepository;
+import com.petinder.auth_service.service.AuthServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -19,19 +20,25 @@ import org.springframework.stereotype.Component;
  * to the calling client with the JWT.
  */
 @Component
-public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRequestResolver {
+public class CustomAuthorReqResolver implements OAuth2AuthorizationRequestResolver {
+    private static final String REDIRECT_PARAM = "redirect_uri";
+
     private final RedirectRepository redirectRepository;
     private final OAuth2AuthorizationRequestResolver defaultResolver;
 
+    //    @Value("${spring.application.api-prefix}")
+    private final String API_PREFIX = "";
+
     @Autowired
-    public CustomAuthorizationRequestResolver(
+    public CustomAuthorReqResolver(
             RedirectRepository redirectRepository,
             ClientRegistrationRepository clientRegistrationRepository
     ) {
         this.redirectRepository = redirectRepository;
         this.defaultResolver = new DefaultOAuth2AuthorizationRequestResolver(
                 clientRegistrationRepository,
-                OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI
+                API_PREFIX +
+                        OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI
         );
     }
 
@@ -47,7 +54,7 @@ public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRe
     public OAuth2AuthorizationRequest resolve(HttpServletRequest request) {
         OAuth2AuthorizationRequest req = defaultResolver.resolve(request);
         if (req != null) {
-            String redirectUri = request.getParameter("redirect_uri");
+            String redirectUri = request.getParameter(REDIRECT_PARAM);
             if (redirectUri != null) {
                 redirectRepository.saveRedirect(req.getState(), redirectUri);
             }
@@ -68,7 +75,7 @@ public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRe
     public OAuth2AuthorizationRequest resolve(HttpServletRequest request, String clientRegistrationId) {
         OAuth2AuthorizationRequest req = defaultResolver.resolve(request, clientRegistrationId);
         if (req != null) {
-            String redirectUri = request.getParameter("redirect_uri");
+            String redirectUri = request.getParameter(REDIRECT_PARAM);
             if (redirectUri != null) {
                 redirectRepository.saveRedirect(req.getState(), redirectUri);
             }

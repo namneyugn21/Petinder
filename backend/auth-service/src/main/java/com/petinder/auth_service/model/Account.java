@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -18,6 +19,10 @@ import java.util.Set;
 @AllArgsConstructor
 public class Account {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "password")
@@ -29,14 +34,11 @@ public class Account {
 
     @ManyToMany
     @JoinTable(
-            name = "account_roles",
-            joinColumns = @JoinColumn(name = "account_email"),
+            name = "account_role",
+            joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_name")
     )
     private Set<Role> roles;
-
-    @OneToMany
-    private Set<AccountProvider> accountProviders;
 
     @CreationTimestamp
     private Instant createdAt;

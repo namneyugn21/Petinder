@@ -1,11 +1,14 @@
 server:
   port: 8080
   forward-headers-strategy: native
+  servlet:
+    context-path: /auth
 
 spring:
   application:
     name: auth-service
-    api-prefix: /auth
+    api-prefix: ""
+    fe-default-url: https://petinder-green.vercel.app/
 
   datasource:
     url: ${POSTGRES_URL}
@@ -25,14 +28,18 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
 
-springdoc:
-  api-docs:
-    path: '${spring.application.api-prefix}/v3/api-docs'
-  swagger-ui:
-    operationsSorter: method
-    try-it-out-enabled: true
-    path: '${spring.application.api-prefix}/swagger-ui.html'
+#springdoc:
+#  api-docs:
+#    path: '${spring.application.api-prefix}/v3/api-docs'
+#  swagger-ui:
+#    operationsSorter: method
+#    try-it-out-enabled: true
+#    path: '${spring.application.api-prefix}/swagger-ui.html'
 
 logging:
   level:

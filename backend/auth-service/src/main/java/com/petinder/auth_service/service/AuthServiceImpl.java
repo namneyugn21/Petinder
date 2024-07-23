@@ -1,13 +1,14 @@
 package com.petinder.auth_service.service;
 
-import com.petinder.auth_service.dto.UserInput;
+import com.petinder.auth_service.dto.UserInfo;
+import com.petinder.auth_service.invoker.UserServiceInvoker;
 import com.petinder.auth_service.model.*;
 import com.petinder.auth_service.repository.AccountProviderRepository;
 import com.petinder.auth_service.repository.AccountRepository;
-import com.petinder.auth_service.repository.RedirectRepository;
-import com.petinder.auth_service.repository.RoleRepository;
+import com.petinder.auth_service.repository.redirect.RedirectRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -15,26 +16,24 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
-import java.net.URI;
-import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final RestClient restClient;
-    private final RoleRepository roleRepository;
     private final AccountRepository accountRepository;
     private final RedirectRepository redirectRepository;
+    private final UserServiceInvoker userServiceInvoker;
     private final AccountProviderRepository accountProviderRepository;
 
     /**
-     * Get the OidcUser from the authentication object and register the user if it does not exist in the database.
-     * Send user info to the User service.
+     * Register the user if there is no account associated with {@code authentication}'s email in the DB.
+     * Additionally, register the provider to the user's account
+     * if this is the first time the user log in via that provider.
      * Redirect to the home page after successful authentication.
      *
      * @param request        the request which caused the successful authentication
@@ -44,124 +43,139 @@ public class AuthServiceImpl implements AuthService {
      * @throws IOException if fail to redirect to the home page
      */
     @Override
+    @Transactional(Transactional.TxType.REQUIRED)
     public void onAuthenticationSuccess(
             HttpServletRequest request,
             HttpServletResponse response,
             Authentication authentication
     ) throws IOException {
-        if (authentication instanceof OAuth2AuthenticationToken token) {
-            if (authentication.getPrincipal() instanceof OAuth2User user) {
-                // Save the user into the database if the user is new
-                try {
-                    registerIfNeed(user, token.getAuthorizedClientRegistrationId());
-                } catch (Exception e) {
-                    throw new RuntimeException("Fail to register/lookup an OAuth2 User", e);    // TODO: custom exception
-                }
-
-                // Obtain the redirect_uri from the initial FE request (when FE call /oauth2/authorization/{provider})
-                String state = request.getParameter("state");
-                String redirectUri = redirectRepository.findByState(state);
-
-                // If the redirect_uri is found, send the JWT to the FE
-                if (redirectUri != null) {
-                    URI uri = UriComponentsBuilder
-                            .fromUriString(redirectUri)
-                            .queryParam("token", ((OidcUser) user).getIdToken().getTokenValue())    // TODO: generate JWT
-                            .build()
-                            .toUri();
-                    redirectRepository.removeByState(state);
-                    response.sendRedirect(uri.toString()); // optional; FE will probably close the window
-                }
-            }
+        if (!(authentication instanceof OAuth2AuthenticationToken token) ||
+                !(authentication.getPrincipal() instanceof OAuth2User user)
+        ) {
+            return;
         }
+
+        // Obtain the redirect_uri from the initial FE request (when FE call /oauth2/authorization/{provider})
+        final String state = request.getParameter("state");
+        String redirectUri = redirectRepository.findAndDeleteByState(state);
+
+        // Save the user into the database if the user is new
+        final Account account = registerIfNeed(user, token.getAuthorizedClientRegistrationId());
+        final List<String> roles = account.getRoles()
+                .stream()
+                .map(Role::getName)
+                .toList();
+
+        // Redirect to the set redirect link
+        redirectUri = UriComponentsBuilder
+                .fromUriString(redirectUri)
+                .queryParam("userId", account.getId())
+                .queryParam("role", roles)
+                .queryParam("token", ((OidcUser) user).getIdToken().getTokenValue())    // TODO: generate JWT
+                .build()
+                .toUriString();
+        response.sendRedirect(redirectUri);
     }
 
     /**
-     * Register the user if it does not exist in the database.
-     * Link the user with the provider if needed.
+     * Extract user info from {@code OAuth2user}.
+     * This function is typically used to construct a DTO that will be sent to User Service to create a new profile.
+     *
+     * @param email user's email extracted from OAuth2User
+     * @param user  user info obtains from OAuth provider
+     * @return {@code UserInfo} DTO
+     */
+    private UserInfo constructUserInfo(
+            final String email, final OAuth2User user
+    ) {
+        // Get user's info
+        String firstName = user.getAttribute("given_name");
+        String lastName = user.getAttribute("family_name");
+        String middleName = user.getAttribute("middle_name");
+        if (firstName == null && lastName == null) {
+            final String fullName = user.getAttribute("name");
+            Assert.notNull(fullName, "Cannot obtain first or last name from OAuth2");
+
+            // Obtain first, middle, and last through full name
+            final String[] names = fullName.split(" ");
+            firstName = names[0];
+            lastName = names[names.length - 1];
+            if (names.length == 3) {
+                middleName = names[1];
+            }
+        }
+        final String picture = user.getAttribute("picture");
+
+        return UserInfo.builder()
+                .email(email)
+                .firstName(firstName)
+                .middleName(middleName)
+                .lastName(lastName)
+                .picture(picture)
+                .build();
+    }
+
+    /**
+     * Register the user if s/he does not exist in the database.
+     * Link the user with the provider if this is the first time the user log in via that provider.
      *
      * @param user     the OAuth2 returned by the {@link OAuth2User}
      * @param provider the provider name
      */
-    private void registerIfNeed(OAuth2User user, String provider) throws Exception {
-        String email = user.getAttribute("email");
+    @Transactional(Transactional.TxType.MANDATORY)
+    public Account registerIfNeed(
+            final OAuth2User user,
+            final String provider
+    ) {
+        final String email = user.getAttribute("email");
         Assert.notNull(email, "Cannot obtain email from OAuth2");
 
-        Optional<Account> account = accountRepository.findById(email);
-
         // New user -> Register a new account
-        if (account.isEmpty()) {
-            // Get first, middle, and last name
-            String firstName = user.getAttribute("givenName");
-            String lastName = user.getAttribute("familyName");
-            String middleName = user.getAttribute("middleName");
-            if (firstName == null && lastName == null) {
-                String fullName = user.getAttribute("name");
-                Assert.notNull(fullName, "Cannot obtain first or last name from OAuth2");
+        final Account account = accountRepository.findByEmail(email)
+                .orElseGet(() -> {
+                    final UserInfo userInfo = constructUserInfo(email, user);
+                    return registerNewAccount(userInfo);
+                });
 
-                // Obtain first, middle, and last through full name
-                String[] names = fullName.split(" ");
-                firstName = names[0];
-                lastName = names[names.length - 1];
-                middleName = names.length == 3 ? names[1] : null;
-            }
-
-            // Get user's picture
-            String picture = user.getAttribute("picture");
-
-            // Register a new account
-            registerNewAccount(
-                    email,
-                    firstName,
-                    middleName,
-                    lastName,
-                    picture
-            );
-        }
-
-        AccountProviderKey key = new AccountProviderKey(
-                email,
+        final AccountProviderKey key = new AccountProviderKey(
+                account,
                 Provider.valueOf(provider.toUpperCase())
         );
-        Optional<AccountProvider> accountProvider = accountProviderRepository.findById(key);
 
         // First time login with this provider -> Link the user with the provider
-        if (accountProvider.isEmpty()) {
+        if (!accountProviderRepository.existsById(key)) {
             AccountProvider accountProviderEntity = new AccountProvider();
-            accountProviderEntity.setId(key);
+            accountProviderEntity.setAccount(account);
+            accountProviderEntity.setProvider(key.getProvider());
             accountProviderRepository.save(accountProviderEntity);
         }
+
+        return account;
     }
 
-    private void registerNewAccount(
-            String email,
-            String firstName,
-            String middleName,
-            String lastName,
-            String picture
+    /**
+     * Create a new account and a new user profile in User Service
+     *
+     * @param userInfo user detail got from OAuth provider
+     * @return a new account
+     */
+    @Transactional(Transactional.TxType.MANDATORY)
+    public Account registerNewAccount(
+            final UserInfo userInfo
     ) {
         // Save account
-        Set<Role> roles = Set.of(roleRepository.findById("USER").orElseThrow());
+        final Set<Role> roles = Set.of(Role.USER);
         Account account = Account.builder()
-                .email(email)
+                .email(userInfo.getEmail())
                 .roles(roles)
                 .status(Status.ACTIVE)
                 .build();
         account = accountRepository.save(account);
 
         // Send user info to the User service
-        UserInput userInput = UserInput.builder()
-                .email(account.getEmail())
-                .lastName(lastName)
-                .middleName(middleName)
-                .firstName(firstName)
-                .picture(picture)
-                .build();
-        sendUserInfo(userInput);
-    }
+        userInfo.setAccountId(account.getId());
+        userServiceInvoker.addNewUser(userInfo);
 
-    private void sendUserInfo(UserInput userInput) {
-        // TODO: Send user info to User service
-        System.out.println("Sending " + userInput);
+        return account;
     }
 }
