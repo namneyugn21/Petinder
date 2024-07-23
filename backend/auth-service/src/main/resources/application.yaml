@@ -1,12 +1,11 @@
 server:
   port: 8080
-  servlet:
-    context-path: /auth
   forward-headers-strategy: native
 
 spring:
   application:
     name: auth-service
+    api-prefix: /auth
 
   datasource:
     url: ${POSTGRES_URL}
@@ -18,29 +17,29 @@ spring:
       client:
         registration:
           google:
+            redirect-uri: "{baseUrl}${spring.application.api-prefix}/login/oauth2/code/{registrationId}"
             client-id: ${GOOGLE_ID}
             client-secret: ${GOOGLE_SECRET}
-            scope:
-              - openid  # Use Oidc instead of OAuth
-              - email   # Request email
-              - profile # Request profile (name, profile picture, etc.)
+            scope: openid, email, profile
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
 springdoc:
-  #  api-docs:
-  #    path: '${spring.application.api-prefix}/v3/api-docs'
+  api-docs:
+    path: '${spring.application.api-prefix}/v3/api-docs'
   swagger-ui:
     operationsSorter: method
     try-it-out-enabled: true
-#    path: '${spring.application.api-prefix}/swagger-ui.html'
+    path: '${spring.application.api-prefix}/swagger-ui.html'
 
 logging:
   level:
-    org.springframework.security.web: DEBUG
-    org.springframework.security.oauth2: DEBUG
-    org.springframework.web.client.RestTemplate: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.springframework.web.client.WebClient: DEBUG
+    org:
+      springframework:
+        security:
+          web: trace
+          oauth2: info
+      hibernate:
+        SQL: info

@@ -3,9 +3,9 @@ package com.petinder.auth_service.service;
 import com.petinder.auth_service.repository.RedirectRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Component;
@@ -26,13 +26,12 @@ public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRe
     @Autowired
     public CustomAuthorizationRequestResolver(
             RedirectRepository redirectRepository,
-            ClientRegistrationRepository clientRegistrationRepository,
-            @Qualifier("defaultAuthorizationRequestBaseUri") String defaultAuthorizationRequestBaseUri
+            ClientRegistrationRepository clientRegistrationRepository
     ) {
         this.redirectRepository = redirectRepository;
         this.defaultResolver = new DefaultOAuth2AuthorizationRequestResolver(
                 clientRegistrationRepository,
-                defaultAuthorizationRequestBaseUri
+                OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI
         );
     }
 
