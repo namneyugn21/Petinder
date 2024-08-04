@@ -33,7 +33,7 @@ a {
 }
 
 .navbar {
-    background-color: #A1CCE4;
+    background-color: #a1cde4;
     display: flex;
     padding: 25px 50px;
     color: #042c54;
@@ -285,6 +285,12 @@ a {
 
     100% {
         opacity: 0;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .navbar__title {
+        font-size: 28px;
     }
 }
 

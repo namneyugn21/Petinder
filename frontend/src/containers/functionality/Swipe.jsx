@@ -4,6 +4,30 @@ import './swipe.css'
 import demo from '../../assets/demo.webp'
 
 const Swipe = () => {
+    const [pets, setPets] = useState({
+        pets: [],
+        nextPage: 0, 
+        nextSize: 10, 
+        totalPage: 1
+    });
+
+    useEffect(() => {
+        const fetchPets = async () => {
+            try {
+                const response = await fetch('http://petinder.bao2803.co/pet?page=0&size=10&sort=name%2CASC');
+                const responseJson = await response.json();
+                const data = responseJson.data;
+                setPets(data);
+            } catch (error) {
+                console.log('ERROR: ', error);
+            }
+        };
+        fetchPets();
+    }, []);
+
+    console.log(pets.pets.length);
+    console.log(pets.pets[0].name);
+    
     return (
         <div className='swipe'>
             <Navbar />

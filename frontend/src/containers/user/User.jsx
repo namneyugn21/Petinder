@@ -30,11 +30,16 @@ const User = () => {
             <Navbar/>
             <div className='user-container'>
                 <div className='user-info-container'>
-                    <h1>User Profile</h1>
-                    <p>First Name: {firstName}</p>
-                    <p>Middle Name: {middleName}</p>
-                    <p>Last Name: {lastName}</p>
-                    <p>Email: {email}</p>
+                    <div className='user-info-header'>
+                        <img src='https://www.w3schools.com/howto/img_avatar.png' alt='avatar' />
+                        <h1 className='ibm-plex-mono-bold'>{firstName} {lastName}</h1>
+                    </div>
+                    <div className='user-info-fields'>
+                        <p className='ibm-plex-mono-regular'><span className='ibm-plex-mono-medium highlighter'>First Name:</span> {firstName}</p>
+                        <p className='ibm-plex-mono-regular'><span className='ibm-plex-mono-medium highlighter'>Middle Name:</span> {middleName}</p>                        
+                        <p className='ibm-plex-mono-regular'><span className='ibm-plex-mono-medium highlighter'>Last Name:</span> {lastName}</p>
+                        <p className='ibm-plex-mono-regular'><span className='ibm-plex-mono-medium highlighter'>Email:</span> {email}</p>                    
+                    </div>
                 </div>
             </div>
         </>

@@ -34,14 +34,14 @@
     padding: 150px 180px;
     height: 85vh;
     background-color: white;
+    background-image: url('../../assets/dogbones.png');
 }
 .about__title {
     width: 50%;
-    height: 100%;
+    padding-top: 150px;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding-top: 150px;
 }
 .about__title h1 {
     font-size: 36px;
@@ -62,7 +62,7 @@
     width: 350px;
     height: 450px;
     object-fit: cover;
-    border: 5px solid #042c54;
+    border: 8px solid #042c54;
     border-radius: 10%;
 }
 .about__button {

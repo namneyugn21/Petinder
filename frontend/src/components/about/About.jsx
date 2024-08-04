@@ -36,7 +36,7 @@ const About = () => {
 
     return (
         <>
-            <Navbar/>
+            <Navbar />
             <div className='about' id='about'>
                 <div className='about__title'>
                     <h1 className='inter__bold slide-top-title'>Find your sidekick !</h1>
@@ -52,7 +52,6 @@ const About = () => {
                         <button className='ibm-plex-mono-regular' onClick={toggleLoginForm}>Get Started</button>
                         </div>
                     }
-
                 </div>
                 <div className='about__image'>
                     <img src={index} alt='smiling dog' />
