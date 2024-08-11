@@ -18,6 +18,9 @@ public class CreatePetInput {
 
     private String picture;
 
+    @NotEmpty(message = "Pet description cannot be empty")
+    private String description;
+
     @NotNull
     private PetProperty.Age age;
 

@@ -10,6 +10,7 @@ public class ReadPetOutput {
     private UUID id;
     private String name;
     private String picture;
+    private String description;
     private PetProperty.Age age;
     private double weight;
     private String breed;
