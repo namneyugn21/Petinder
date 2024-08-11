@@ -12,9 +12,9 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "*"
+            allowedOrigins: "http://localhost:3000", "https://petinder-green.vercel.app"
             allowedHeaders: "*"
-            allowedMethods: "*"
+            allowedMethods: "GET", "POST", "PUT", "DELETE"
       forwarded:
         enabled: true
       routes:
