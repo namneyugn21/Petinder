@@ -20,14 +20,18 @@
     background-color: white;
     height: 85vh;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-image: url('../../assets/dogbones.png');
 }
 
-.swipe__subcontainer-left {
-    width: 45%;
-}
-
-.swipe__subcontainer-right {
-    width: 55%;
+.swipe__subcontainer {
+    display: flex;
+    background-color: hsla(201, 55%, 76%, 0.300);
+    padding: 25px;
+    border-radius: 25px;
+    position: relative;
 }
 
 .swipe__subcontainer-left, .swipe__subcontainer-right {
@@ -39,27 +43,25 @@
 }
 
 .swipe__subcontainer-description-container {
-    background-color: hsla(201, 55%, 76%, 0.300);
     width: 500px;
     height: 600px;
-    border-radius: 25px;
-    padding: 0px 25px 25px 25px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    background-color: white;
+    padding: 50px 25px 50px 25px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
 }
 
 .swipe__subcontainer-description-container h1 {
     font-size: 30px;
-    padding: 25px;
     color: #042c54;
 }
 
 .swipe__subcontainer-description {
-    background-color: white;
     height: 100%;
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
 }
 
 .swipe__subcontainer-description-paragraph {
@@ -77,10 +79,8 @@
 }
 
 .swipe__subcontainer-image-container {
-    background-color: hsla(201, 55%, 76%, 0.300);
     width: 500px;
     height: 600px;
-    border-radius: 25px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -90,6 +90,58 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 25px;
-    border: #042c54 5px solid;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    pointer-events: none; /* Prevent click events on the image */
+}
+
+.swipe__subcontainer-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 50px;
+    padding-top: 30px;
+}
+
+.swipe__subcontainer-button {
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 10px 0px hsla(201, 54%, 76%, 0.4);
+    cursor: pointer;
+}
+
+.swipe__subcontainer-button img {
+    width: 50px;
+    height: 50px;
+}
+
+.swipe__subcontainer-buttons-yes-image {
+    background-color: rgba(255, 196, 233, 0.5);
+}
+.swipe__subcontainer-buttons-yes-image:active {
+    background-color: rgba(253, 165, 221, 0.5);
+}
+
+.swipe__subcontainer-buttons-no-image {
+    background-color: rgba(126, 210, 255, 0.5);
+}
+.swipe__subcontainer-buttons-no-image:active {
+    background-color: rgba(92, 196, 252, 0.5);
+}
+
+.swipe__subcontainer-buttons-prev-image {
+    background-color: rgba(255, 238, 111, 0.5);
+}
+.swipe__subcontainer-buttons-prev-image:active {
+    background-color: rgba(254, 233, 77, 0.5);
+}
+
+.out-of-order-msg {
+    font-size: 25px;
 }

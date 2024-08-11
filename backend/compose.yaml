@@ -58,7 +58,7 @@ services:
     volumes:
       - pet-data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 5435:5432
     healthcheck:
       test: [ "CMD", "pg_isready" ]
       interval: 10s

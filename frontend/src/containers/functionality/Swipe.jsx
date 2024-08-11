@@ -1,23 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from '../../components'
 import './swipe.css'
+
+import { motion, useMotionValue, useTransform } from 'framer-motion'
+
 import demo from '../../assets/demo.webp'
+import yes from '../../assets/yes-button.png'
+import no from '../../assets/no-button.png'
+import prev from '../../assets/prev-button.png'
 
 const Swipe = () => {
-    const [pets, setPets] = useState({
-        pets: [],
-        nextPage: 0, 
-        nextSize: 10, 
-        totalPage: 1
-    });
+    // State to hole the list of pets and the current pet index
+    const [pets, setPets] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
+    // Motion value for the x-axis of the card
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    // Transform the x-axis value to rotate the card to create the swipe effect
+    const rotate = useTransform(x, [-1000, 0, 1000], [-45, 0, 45]);
+
+    // Fetch the data from the API
     useEffect(() => {
         const fetchPets = async () => {
             try {
                 const response = await fetch('http://petinder.bao2803.co/pet?page=0&size=10&sort=name%2CASC');
                 const responseJson = await response.json();
-                const data = responseJson.data;
-                setPets(data);
+                setPets(responseJson.data.pets);
             } catch (error) {
                 console.log('ERROR: ', error);
             }
@@ -25,37 +35,90 @@ const Swipe = () => {
         fetchPets();
     }, []);
 
-    console.log(pets.pets.length);
-    console.log(pets.pets[0].name);
-    
+    const handleYesClick = () => {
+        setCurrentIndex((currentIndex + 1) % pets.length);
+    };
+
+    const handleNoClick = () => {
+        setCurrentIndex((currentIndex + 1) % pets.length);
+    };
+
+    const handlePrevClick = () => {
+        setCurrentIndex((currentIndex - 1 + pets.length) % pets.length);
+    };
+
+    // Handle swipe end event
+    const handleDragEnd = (event, info) => {
+        const swipeThreshold = 200; // Minimum distance to consider a swipe
+        if (info.offset.x > swipeThreshold) {
+            handleYesClick(); // Swipe right, consider it a 'Yes'
+        } else if (info.offset.x < -swipeThreshold) {
+            handleNoClick(); // Swipe left, consider it a 'No'
+        }
+        x.set(0); // Reset position after swipe
+        y.set(0); // Reset position after swipe
+    };
+
     return (
         <div className='swipe'>
-            <Navbar />
+            <Navbar /> {/* Render the Navbar component */}
             <div className='swipe__container'>
-                <div className='swipe__subcontainer-left'>
-                    <div className='swipe__subcontainer-description-container'>
-                        <h1 className='inter__bold'>Cookies</h1>
-                        <div className='swipe__subcontainer-description'> 
-                            <div className='swipe__subcontainer-description-paragraph'>
-                                <p className='hubballi-regular'>
-                                    Hi there!
-                                    My name is Cookies, and I'm a playful Golden Retriever. I'm 3 years old and full of energy and love. I love playing fetch, going on long walks, and getting lots of belly rubs. I can't wait to find my forever home where I can share all my tail wags and joy. Come visit me at the shelter and let's be best friends!
-                                </p>
-                            </div>
-                            <div className='swipe__subcontainer-description-info hubballi-regular'>
-                                <p>Eyes colour: black</p>
-                                <p>Furs colour: brown</p>
-                                <p>Breed: golden retriever</p>
-                                <p>Age: 3</p>
+                {pets.length > 0 ? (
+                    <motion.div 
+                        className='swipe__card' 
+                        style={{ x, y, rotate }} // Apply the x-axis value and the rotation value to the card
+                        drag='x' // Enable the drag gesture on the x-axis
+                        dragConstraints={{ left: 0, right: 0 }} // Set the constraints for the drag gesture
+                        onDrag={(_, info) => {
+                            // Update y position based on vertical drag
+                            y.set(info.offset.y);
+                        }}
+                        onDragEnd={handleDragEnd} // Handle the drag end event
+                    >
+                        <div className='swipe__subcontainer'>
+                            <div className='swipe__subcontainer-left'>
+                                <div className='swipe__subcontainer-image-container'>
+                                    <img src={demo} alt='shelter-dog' className='swipe__subcontainer-image'></img>
+                                </div>
+                            </div>          
+                            <div className='swipe__subcontainer-right'>
+                                <div className='swipe__subcontainer-description-container'>
+                                    <h1 className='inter__bold'>{pets[currentIndex].name}</h1>
+                                    <div className='swipe__subcontainer-description'> 
+                                        <div className='swipe__subcontainer-description-paragraph'>
+                                            <p className='hubballi-regular'>
+                                                Hi there!
+                                                My name is {pets[currentIndex].name}, and I'm a playful {pets[currentIndex].breed}. I love playing fetch, going on long walks, and getting lots of belly rubs. I can't wait to find my forever home where I can share all my tail wags and joy. Come visit me at the shelter and let's be best friends!
+                                            </p>
+                                        </div>
+                                        <div className='swipe__subcontainer-description-info hubballi-regular'>
+                                            <p>Eyes colour: {pets[currentIndex].eyeColor}</p>
+                                            <p>Furs colour: {pets[currentIndex].furColor}</p>
+                                            <p>Breed: {pets[currentIndex].breed}</p>
+                                            <p>Age: {pets[currentIndex].age}</p>
+                                            <p>Weight: {pets[currentIndex].weight}</p>
+                                        </div>
+                                    </div>
+                                    <div className='swipe__subcontainer-buttons'>
+                                        <div className='swipe__subcontainer-button swipe__subcontainer-buttons-no-image' onClick={handleNoClick}>
+                                            <img src={no} alt='no-button'></img>
+                                        </div>
+                                        <div className='swipe__subcontainer-button swipe__subcontainer-buttons-prev-image' onClick={handlePrevClick}>
+                                            <img src={prev} alt='prev-button'></img>
+                                        </div>
+                                        <div className='swipe__subcontainer-button swipe__subcontainer-buttons-yes-image' onClick={handleYesClick}>
+                                            <img src={yes} alt='yes-button'></img>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </motion.div>
+                ) : (
+                    <div className='swipe__subcontainer'>
+                        <p className='hubballi-regular out-of-order-msg'>Seems like you have met all of our furry friends!</p>
                     </div>
-                </div>
-                <div className='swipe__subcontainer-right'>
-                    <div className='swipe__subcontainer-image-container'>
-                        <img src={demo} alt='shelter-dog' className='swipe__subcontainer-image'></img>
-                    </div>
-                </div>
+                )}
             </div>
         </div>
     )
