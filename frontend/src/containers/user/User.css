@@ -3,12 +3,38 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     height: 85vh;
+    background-image: url('../../assets/dogbones.png');
 }
-
 .user-info-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 500px;
+    background-color: white;
+    border-radius: 10px;
+    border: 5px solid #042c54;
+    padding: 50px;
+    gap: 50px;
+}
+.user-info-header {
+    display: flex;
     align-items: center;
+    gap: 50px;
+}
+.user-info-header img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 5px solid #042c54;
+    border-radius: 50%;
+}
+.user-info-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.highlighter {
+    background-color: hsla(201, 55%, 76%, 0.5);
 }
