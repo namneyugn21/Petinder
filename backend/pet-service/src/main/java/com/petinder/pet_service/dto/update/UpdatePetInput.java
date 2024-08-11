@@ -15,6 +15,7 @@ public class UpdatePetInput {
     private double weight;
     private UUID id;
     private UUID ownerId;
+    private String description;
     private Pet.Status status;
     private String name;
     private String picture;

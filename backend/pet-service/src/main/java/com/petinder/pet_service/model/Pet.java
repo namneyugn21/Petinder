@@ -30,6 +30,8 @@ public class Pet {
 
     private String picture;
 
+    private String description;
+
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;

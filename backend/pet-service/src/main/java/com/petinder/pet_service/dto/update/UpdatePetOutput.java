@@ -8,6 +8,7 @@ public class UpdatePetOutput {
     private String id;
     private String name;
     private String picture;
+    private String description;
     private PetProperty.Age age;
     private double weight;
     private String breed;
