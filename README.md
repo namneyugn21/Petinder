@@ -1,17 +1,25 @@
 # **Petinder**
-Petinder is a web application that enables users to connect and discover pets available for adoption at local shelters, similar to the popular app Tinder. <br><br>
-Stay tuned for more updates!
 
-## Progress and Disclaimer
-Currently, we are working on the swiping page...<br>
-In addition, we found out that it is very costly to host and deploy backend database for this project. Hence, in order to run the program, we have decided (for now) to run all of the neccessary database in each terminal, as well as the frontend side on a separate terminal. 
+Petinder is an innovative web application designed to connect users with pets available for adoption at local shelters, offering a swiping experience similar to the popular Tinder app. Discover your perfect pet match with just a swipe!
 
-## Previews
-### Home Page
+## 🚀 **Project Updates**
+We're currently focusing on developing the swiping interface, bringing the heart of Petinder to life. Please note that due to the high cost of hosting and deploying a backend database, we've opted to run all necessary databases locally in separate terminal instances, alongside the frontend. This approach is temporary, and we aim to streamline the deployment process in future updates.
+
+## 📸 **Previews**
+Here's a sneak peek at what Petinder looks like so far:
+
+### 🏠 Home Page
 ![Home Page](<documentation/screenshots/homepage.png>)
-### Sign In Form
+
+### 🔐 Sign In Form
 ![Sign In Form](<documentation/screenshots/signin.png>)
-### Swipe Page
+
+### 💖 Swipe Page
 ![Swipe Page](<documentation/screenshots/swipe.png>)
-### Safety Information
+
+### 🛡️ Safety Information
 ![Safety Information](<documentation/screenshots/safety.png>)
+
+---
+
+Stay tuned for more updates as we continue to enhance Petinder, making it easier for you to find your furry friend!
