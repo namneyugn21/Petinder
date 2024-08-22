@@ -14,4 +14,6 @@ public class UpdateUserInput {
     private String middleName;
     private String lastName;
     private String picture;
+    private String phoneNumber;
+    private String description;
 }

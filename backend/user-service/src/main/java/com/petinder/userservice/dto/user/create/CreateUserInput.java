@@ -19,9 +19,7 @@ public class CreateUserInput {
 
     private String picture;
 
-    @NotEmpty(message = "Phone number must not be empty")
     private String phoneNumber;
 
-    @NotEmpty(message = "Description must not be empty")
     private String description;
 }

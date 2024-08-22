@@ -34,14 +34,11 @@ public class User implements Serializable {
     @Column(name = "user_picture")
     private String picture;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
-
-    @Column(name = "shelter", nullable = false)
-    private boolean isShelter;
 
     @UpdateTimestamp
     @Column(name = "update_at", nullable = false)
