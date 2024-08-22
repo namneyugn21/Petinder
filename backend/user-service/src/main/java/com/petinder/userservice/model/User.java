@@ -7,7 +7,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 
@@ -34,6 +33,12 @@ public class User implements Serializable {
 
     @Column(name = "user_picture")
     private String picture;
+
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
+
+    @Column(name = "description", nullable = false)
+    private String description;
 
     @Column(name = "shelter", nullable = false)
     private boolean isShelter;
