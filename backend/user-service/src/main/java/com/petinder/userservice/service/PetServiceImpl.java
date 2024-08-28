@@ -75,6 +75,7 @@ public class PetServiceImpl implements PetService {
                 .pets(pets)
                 .nextPage(nextPage)
                 .nextSize(nextSize)
+                .totalElements(petPage.getNumberOfElements())
                 .totalPage(totalPage)
                 .build();
     }

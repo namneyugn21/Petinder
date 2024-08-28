@@ -13,4 +13,5 @@ public class ListUserPetOutput {
     private int nextPage;
     private int nextSize;
     private int totalPage;
+    private int totalElements;
 }
