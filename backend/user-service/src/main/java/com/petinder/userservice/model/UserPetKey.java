@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PetKey implements Serializable {
+public class UserPetKey implements Serializable {
     private UUID userId;
 
     private UUID petId;

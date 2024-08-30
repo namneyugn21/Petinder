@@ -1,4 +1,4 @@
-package com.petinder.userservice.dto.pet;
+package com.petinder.userservice.dto.pet.register;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

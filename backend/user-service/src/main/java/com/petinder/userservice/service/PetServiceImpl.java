@@ -1,82 +1,50 @@
 package com.petinder.userservice.service;
 
-import com.petinder.userservice.dto.pet.ListUserPetInput;
-import com.petinder.userservice.dto.pet.ListUserPetOutput;
+import com.petinder.userservice.config.RabbitMqConfig;
 import com.petinder.userservice.dto.comm.ReadPetOutput;
-import com.petinder.userservice.dto.pet.RegisterPetInput;
-import com.petinder.userservice.exception.UserNotFound;
-import com.petinder.userservice.invoker.PetServiceInvoker;
-import com.petinder.userservice.mapper.PetMapper;
-import com.petinder.userservice.model.Pet;
-import com.petinder.userservice.model.User;
-import com.petinder.userservice.repository.PetRepository;
-import com.petinder.userservice.repository.UserRepository;
+import com.petinder.userservice.model.UserPet;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PetServiceImpl implements PetService {
-    private final PetMapper petMapper;
-    private final PetRepository petRepository;
-    private final UserRepository userRepository;
-    private final PetServiceInvoker petServiceInvoker;
+    private final RestClient restClient;
+    private final TopicExchange topicExchange;
+    private final RabbitTemplate rabbitTemplate;
 
-    @Override
-    public void registerPet(RegisterPetInput input) {
-        // Get user reference from User DB
-        UUID userId = input.getUserId();
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFound(userId);
-        }
-        User user = userRepository.getReferenceById(userId);
+    @Value("${spring.application.services.pet-service}")
+    private String ENDPOINT;
 
-        // Save pet
-        Pet pet = petMapper.registerPetInputToPet(input);
-        pet.setUser(user);
-        petRepository.save(pet);
+    public List<ReadPetOutput> getPets(final List<UUID> petIds) {
+        final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ENDPOINT)
+                .path("/internal");
+        petIds.forEach(id -> builder.queryParam("petIds", id));
+
+        return restClient.get()
+                .uri(builder.toUriString())
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {});
     }
 
-    @Override
-    public ListUserPetOutput listUserPet(ListUserPetInput input) {
-        final UUID userId = input.getUserId();
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFound(userId);
-        }
+    public void likePet(final UserPet userPet) {
+        rabbitTemplate.convertAndSend(topicExchange.getName(), RabbitMqConfig.LIKE_PET, userPet);
+        log.info("Sent {} to like queue", userPet);
+    }
 
-        // Get futurePets' details from Pet Service using list of pet ids
-        Page<Pet> petPage = petRepository.findAllByUserId(userId, input.getPageable());
-        List<UUID> petIds = petPage.get().map(Pet::getPetId).toList();
-        CompletableFuture<List<ReadPetOutput>> futurePets = petServiceInvoker.getPets(petIds);
-
-        // Next page info
-        Pageable nextPetPage = petPage.nextOrLastPageable();
-        int nextPage = nextPetPage.getPageNumber();
-        int nextSize = nextPetPage.getPageSize();
-        int totalPage = petPage.getTotalPages();
-
-        List<ReadPetOutput> pets;
-        try {
-            pets = futurePets.get(30, TimeUnit.SECONDS);
-        } catch (TimeoutException | InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-
-        return ListUserPetOutput.builder()
-                .pets(pets)
-                .nextPage(nextPage)
-                .nextSize(nextSize)
-                .totalElements(petPage.getNumberOfElements())
-                .totalPage(totalPage)
-                .build();
+    public void dislikePet(final UserPet userPet) {
+        rabbitTemplate.convertAndSend(topicExchange.getName(), RabbitMqConfig.DISLIKE_PET, userPet);
+        log.info("Sent {} to dislike queue", userPet);
     }
 }
