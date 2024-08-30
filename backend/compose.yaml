@@ -7,6 +7,7 @@ services:
     ports:
       - 3000:3000
   ### Frontend ###
+
   ### API GATEWAY ###
   gate-service:
     restart: on-failure
@@ -110,6 +111,15 @@ services:
       timeout: 5s
       retries: 5
   ### USER SERVICE ###
+  
+  ### Broker ###
+  rabbitmq:
+    image: 'rabbitmq:latest'
+    env_file:
+      - path: ./user-service/env/docker.env
+    expose:
+      - 5672
+  ### Broker ###
 
 volumes:
   auth-data:
