@@ -1,5 +1,6 @@
 package com.petinder.pet_service.service;
 
+import com.petinder.pet_service.config.RabbitMqConfig;
 import com.petinder.pet_service.dto.create.CreatePetInput;
 import com.petinder.pet_service.dto.create.CreatePetOutput;
 import com.petinder.pet_service.dto.delete.DeletePetInput;
@@ -17,6 +18,8 @@ import com.petinder.pet_service.model.Pet;
 import com.petinder.pet_service.repository.PetRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PetServiceImpl implements PetService {
@@ -87,5 +91,15 @@ public class PetServiceImpl implements PetService {
                 .stream()
                 .map(petMapper::petToReadPetOutput)
                 .toList();
+    }
+
+    @RabbitListener(queues = RabbitMqConfig.LIKE_PET)
+    public void like(String in) {
+        log.info("LIKE {}", in);
+    }
+
+    @RabbitListener(queues = RabbitMqConfig.DISLIKE_PET)
+    public void dislike(String in) {
+        log.info("DISLIKE {}", in);
     }
 }
