@@ -26,4 +26,6 @@ public interface PetService {
     DeletePetOutput deletePet(DeletePetInput deletePetInput);
 
     List<ReadPetOutput> readPetBulk(List<UUID> petIds);
+
+    Boolean checkPetBulk(List<UUID> petIds);
 }

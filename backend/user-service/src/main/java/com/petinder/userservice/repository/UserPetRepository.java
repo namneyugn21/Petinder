@@ -12,4 +12,6 @@ public interface UserPetRepository extends JpaRepository<UserPet, UserPetKey> {
     Page<UserPet> findAllByUserId(UUID userId, Pageable pageable);
 
     Page<UserPet> findAllByUserIdAndLiked(UUID userId, boolean liked, Pageable pageable);
+
+    boolean existsByUserIdAndPetId(UUID userId, UUID petId);
 }

@@ -12,7 +12,7 @@ import com.petinder.pet_service.dto.read.ReadPetOutput;
 import com.petinder.pet_service.dto.update.UpdatePetInput;
 import com.petinder.pet_service.dto.update.UpdatePetOutput;
 import com.petinder.pet_service.service.PetService;
-import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -77,11 +77,19 @@ public class PetController {
         return ResponseDTO.success(deletePetOutput);
     }
 
-    @Operation(summary = "Internal: Read pet in bulk")
+    @Hidden
     @GetMapping("/internal")
     public List<ReadPetOutput> readPetBulk(
-            @ParameterObject @RequestParam List<UUID> petIds
+            @RequestParam List<UUID> petIds
     ) {
         return petService.readPetBulk(petIds);
+    }
+
+    @Hidden
+    @GetMapping("/internal/check")
+    public Boolean checkPetBulk(
+            @RequestParam List<UUID> petIds
+    ) {
+        return petService.checkPetBulk(petIds);
     }
 }

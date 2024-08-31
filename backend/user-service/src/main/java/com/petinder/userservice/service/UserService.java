@@ -6,8 +6,7 @@ import com.petinder.userservice.dto.pet.list.ListUserPetInput;
 import com.petinder.userservice.dto.pet.list.ListUserPetOutput;
 import com.petinder.userservice.dto.pet.recommend.RecommendPetInput;
 import com.petinder.userservice.dto.pet.recommend.RecommendPetOutput;
-import com.petinder.userservice.dto.user.create.CreateUserInput;
-import com.petinder.userservice.dto.user.create.CreateUserOutput;
+import com.petinder.userservice.dto.comm.CreateUserInput;
 import com.petinder.userservice.dto.user.delete.DeleteUserInput;
 import com.petinder.userservice.dto.user.delete.DeleteUserOutput;
 import com.petinder.userservice.dto.user.list.ListUserInput;
@@ -18,7 +17,7 @@ import com.petinder.userservice.dto.user.update.UpdateUserInput;
 import com.petinder.userservice.dto.user.update.UpdateUserOutput;
 
 public interface UserService {
-    CreateUserOutput createUser(CreateUserInput input);
+    void createUser(CreateUserInput input);
 
     ReadUserOutput readUser(ReadUserInput input);
 

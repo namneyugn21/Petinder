@@ -1,7 +1,6 @@
 package com.petinder.userservice.mapper;
 
-import com.petinder.userservice.dto.user.create.CreateUserInput;
-import com.petinder.userservice.dto.user.create.CreateUserOutput;
+import com.petinder.userservice.dto.comm.CreateUserInput;
 import com.petinder.userservice.dto.user.read.ReadUserOutput;
 import com.petinder.userservice.dto.user.update.UpdateUserInput;
 import com.petinder.userservice.dto.user.update.UpdateUserOutput;
@@ -12,8 +11,6 @@ import org.mapstruct.*;
 public interface UserMapper {
     User createUserInputToUser(CreateUserInput input);
 
-    @Mapping(source = "id", target = "userId")
-    CreateUserOutput userToCreateUserOutput(User user);
 
     ReadUserOutput userToReadUserOutput(User user);
 

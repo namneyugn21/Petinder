@@ -35,14 +35,35 @@ public class PetServiceImpl implements PetService {
         return restClient.get()
                 .uri(builder.toUriString())
                 .retrieve()
-                .body(new ParameterizedTypeReference<>() {});
+                .body(new ParameterizedTypeReference<>() {
+                });
     }
 
+    @Override
+    public boolean checkPets(final List<UUID> petIds) {
+        if (petIds == null || petIds.isEmpty()) {
+            return false;
+        }
+
+        final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ENDPOINT)
+                .path("/internal/check");
+        petIds.forEach(id -> builder.queryParam("petIds", id));
+
+        return Boolean.TRUE.equals(
+                restClient.get()
+                        .uri(builder.toUriString())
+                        .retrieve()
+                        .body(Boolean.class)
+        );
+    }
+
+    @Override
     public void likePet(final UserPet userPet) {
         rabbitTemplate.convertAndSend(topicExchange.getName(), RabbitMqConfig.LIKE_PET, userPet);
         log.info("Sent {} to like queue", userPet);
     }
 
+    @Override
     public void dislikePet(final UserPet userPet) {
         rabbitTemplate.convertAndSend(topicExchange.getName(), RabbitMqConfig.DISLIKE_PET, userPet);
         log.info("Sent {} to dislike queue", userPet);

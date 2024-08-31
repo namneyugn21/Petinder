@@ -1,14 +1,14 @@
 package com.petinder.userservice.service;
 
+import com.petinder.userservice.config.RabbitMqConfig;
 import com.petinder.userservice.dto.EmptyResponse;
+import com.petinder.userservice.dto.comm.CreateUserInput;
 import com.petinder.userservice.dto.comm.ReadPetOutput;
 import com.petinder.userservice.dto.pet.like.LikePetInput;
 import com.petinder.userservice.dto.pet.list.ListUserPetInput;
 import com.petinder.userservice.dto.pet.list.ListUserPetOutput;
 import com.petinder.userservice.dto.pet.recommend.RecommendPetInput;
 import com.petinder.userservice.dto.pet.recommend.RecommendPetOutput;
-import com.petinder.userservice.dto.user.create.CreateUserInput;
-import com.petinder.userservice.dto.user.create.CreateUserOutput;
 import com.petinder.userservice.dto.user.delete.DeleteUserInput;
 import com.petinder.userservice.dto.user.delete.DeleteUserOutput;
 import com.petinder.userservice.dto.user.list.ListUserInput;
@@ -25,6 +25,7 @@ import com.petinder.userservice.repository.UserPetRepository;
 import com.petinder.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,12 +44,12 @@ public class UserServiceImpl implements UserService {
     private final UserPetRepository userPetRepository;
 
     @Override
-    public CreateUserOutput createUser(
+    @RabbitListener(queues = RabbitMqConfig.CREATE_USER)
+    public void createUser(
             CreateUserInput input
     ) {
-        User user = userMapper.createUserInputToUser(input);
-        user = userRepository.save(user);
-        return userMapper.userToCreateUserOutput(user);
+        final User user = userMapper.createUserInputToUser(input);
+        userRepository.save(user);
     }
 
     @Override
@@ -130,12 +131,19 @@ public class UserServiceImpl implements UserService {
         }
 
         // Save pet to DB
+        if (userPetRepository.existsByUserIdAndPetId(input.getUserId(), input.getPetId())) {
+            log.warn("Duplicate like. Pet is recommended twice to the same user!");
+            return new EmptyResponse();
+        }
+        if (!petService.checkPets(List.of(input.getPetId()))) {
+            throw new RuntimeException("Pet " + input.getPetId() + " does not exist");
+        }
         final UserPet userPet = UserPet.builder()
                 .userId(input.getUserId())
                 .petId(input.getPetId())
                 .liked(Boolean.TRUE)
                 .build();
-        userPetRepository.save(userPet);
+        userPetRepository.saveAndFlush(userPet);    // flush to make sure any DB errors will be thrown now
 
         // Send it to RabbitMQ
         petService.likePet(userPet);
@@ -184,12 +192,19 @@ public class UserServiceImpl implements UserService {
         }
 
         // Save pet to DB
+        if (userPetRepository.existsByUserIdAndPetId(input.getUserId(), input.getPetId())) {
+            log.warn("Duplicate dislike. Pet is recommended twice to the same user!");
+            return new EmptyResponse();
+        }
+        if (!petService.checkPets(List.of(input.getPetId()))) {
+            throw new RuntimeException("Pet " + input.getPetId() + " does not exist");
+        }
         final UserPet userPet = UserPet.builder()
                 .userId(input.getUserId())
                 .petId(input.getPetId())
                 .liked(Boolean.FALSE)
                 .build();
-        userPetRepository.save(userPet);
+        userPetRepository.saveAndFlush(userPet);
 
         // Send it to RabbitMQ
         petService.dislikePet(userPet);

@@ -99,6 +99,11 @@ public class PetServiceImpl implements PetService {
                 .toList();
     }
 
+    @Override
+    public Boolean checkPetBulk(List<UUID> petIds) {
+        return petRepository.findAllById(petIds).size() == petIds.size();
+    }
+
     @RabbitListener(queues = RabbitMqConfig.LIKE_PET)
     public void like(UserPetDto in) {
         log.info("{} LIKE {}", in.getUserId(), in.getPetId());
