@@ -17,7 +17,8 @@ import com.petinder.userservice.dto.user.read.ReadUserInput;
 import com.petinder.userservice.dto.user.read.ReadUserOutput;
 import com.petinder.userservice.dto.user.update.UpdateUserInput;
 import com.petinder.userservice.dto.user.update.UpdateUserOutput;
-import com.petinder.userservice.exception.UserNotFound;
+import com.petinder.userservice.exception.black.PetNotFound;
+import com.petinder.userservice.exception.white.UserNotFound;
 import com.petinder.userservice.mapper.UserMapper;
 import com.petinder.userservice.model.User;
 import com.petinder.userservice.model.UserPet;
@@ -136,7 +137,7 @@ public class UserServiceImpl implements UserService {
             return new EmptyResponse();
         }
         if (!petService.checkPets(List.of(input.getPetId()))) {
-            throw new RuntimeException("Pet " + input.getPetId() + " does not exist");
+            throw new PetNotFound(input.getPetId());
         }
         final UserPet userPet = UserPet.builder()
                 .userId(input.getUserId())
@@ -197,7 +198,7 @@ public class UserServiceImpl implements UserService {
             return new EmptyResponse();
         }
         if (!petService.checkPets(List.of(input.getPetId()))) {
-            throw new RuntimeException("Pet " + input.getPetId() + " does not exist");
+            throw new PetNotFound(input.getPetId());
         }
         final UserPet userPet = UserPet.builder()
                 .userId(input.getUserId())

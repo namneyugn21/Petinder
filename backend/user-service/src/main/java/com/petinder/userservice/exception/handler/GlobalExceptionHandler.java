@@ -1,9 +1,11 @@
 package com.petinder.userservice.exception.handler;
 
+
 import com.petinder.userservice.dto.ExceptionDTO;
 import com.petinder.userservice.dto.ResponseDTO;
 import com.petinder.userservice.exception.BaseException;
-import com.petinder.userservice.exception.UserNotFound;
+import com.petinder.userservice.exception.black.BlackException;
+import com.petinder.userservice.exception.white.WhiteException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -13,37 +15,49 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    private static final String UNKNOWN_CODE = "UNKNOWN";
-    private static final String GENERIC_MSG =
-            "Something went wrong. Please try again, and contact us if the problem persists.";
+    @ExceptionHandler({Exception.class, BlackException.class})
+    ResponseEntity<ResponseDTO<ExceptionDTO>> unexpectExceptionHandler(
+            final Exception e
+    ) {
+        final HttpStatus status;
+        final ExceptionDTO exceptionDTO;
 
-    private static final Map<Class<? extends Exception>, String> EXCEPTION_TO_CODE = Map.of(
-            UserNotFound.class, "USR_1",
-            WebExchangeBindException.class, "USR_2"
-    );
+        // System/Known exception
+        if (e instanceof BlackException blackException) {
+            exceptionDTO = new ExceptionDTO(blackException.getCode(), blackException.getMessages());
+            if (blackException.getStatus().is5xxServerError()) {
+                log.error(e.toString());
+                e.printStackTrace(System.err);
+            } else {
+                log.warn(e.toString());
+            }
+            status = blackException.getStatus();
+        }
 
-    private static final Map<Class<? extends Exception>, HttpStatus> EXCEPTION_TO_HTTP_STATUS = Map.of(
-            UserNotFound.class, HttpStatus.NOT_FOUND,
-            WebExchangeBindException.class, HttpStatus.BAD_REQUEST
-    );
+        // Unknown Exception
+        else {
+            exceptionDTO = new ExceptionDTO(BaseException.createCode(), BaseException.DEFAULT_MSG);
+            log.error(String.valueOf(e));
+            e.printStackTrace(System.err);
+            status = BlackException.DEFAULT_STATUS;
+        }
 
-    private static final Set<Class<? extends Exception>> WHITE_LIST = Set.of(
-            UserNotFound.class,
-            WebExchangeBindException.class
-    );
+        final ResponseDTO<ExceptionDTO> body = ResponseDTO.error(exceptionDTO);
+        return ResponseEntity
+                .status(status)
+                .body(body);
+    }
 
+    // Handle validation error
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException e,
@@ -51,47 +65,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatusCode status,
             WebRequest request
     ) {
-        List<String> errorList = e
+        final List<String> errorList = e
                 .getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
-        String code = EXCEPTION_TO_CODE.getOrDefault(e.getClass(), UNKNOWN_CODE);
-        ExceptionDTO exceptionDTO = ExceptionDTO.builder()
-                .code(code)
-                .message(errorList)
-                .build();
-        ResponseDTO<ExceptionDTO> body = ResponseDTO.error(exceptionDTO);
-
-        return handleExceptionInternal(e, body, headers, status, request);
+        final ResponseDTO<ExceptionDTO> body = ResponseDTO.error(new ExceptionDTO("USER_BR", errorList));
+        return this.handleExceptionInternal(e, body, headers, status, request);
     }
 
-
     @ExceptionHandler
-    public ResponseEntity<ResponseDTO<ExceptionDTO>> exceptionHandler(
-            BaseException e
+    ResponseEntity<ResponseDTO<ExceptionDTO>> expectExceptionHandler(
+            WhiteException e
     ) {
-        log.error(String.valueOf(e));
+        log.info(e.toString());
 
-        // Body
-        String code = EXCEPTION_TO_CODE.getOrDefault(e.getClass(), UNKNOWN_CODE);
-        List<String> message = List.of(WHITE_LIST.contains(e.getClass()) ? e.getMessage() : GENERIC_MSG);
-        ExceptionDTO exceptionDTO = ExceptionDTO.builder()
-                .code(code)
-                .message(message)
-                .build();
-        ResponseDTO<ExceptionDTO> body = ResponseDTO.error(exceptionDTO);
-
-        // HTTP Status
-        HttpStatus status = EXCEPTION_TO_HTTP_STATUS.getOrDefault(
-                e.getClass(),
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
-
+        final ExceptionDTO exception = new ExceptionDTO(e.getCode(), e.getMessages());
+        final ResponseDTO<ExceptionDTO> body = ResponseDTO.error(exception);
         return ResponseEntity
-                .status(status)
+                .status(e.getStatus())
                 .body(body);
     }
 }
