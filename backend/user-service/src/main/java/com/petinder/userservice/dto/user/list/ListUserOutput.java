@@ -1,14 +1,17 @@
 package com.petinder.userservice.dto.user.list;
 
 import com.petinder.userservice.dto.user.read.ReadUserOutput;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@Builder
 public class ListUserOutput {
     private List<ReadUserOutput> users;
-    private int nextPage;
-    private int size;
-    private int totalPage;
+    private Integer nextPage;
+    private Integer size;
+    private Integer totalPage;
+    private Long totalElements;
 }

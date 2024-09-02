@@ -1,7 +1,14 @@
 package com.petinder.userservice.service;
 
-import com.petinder.userservice.dto.user.create.CreateUserInput;
-import com.petinder.userservice.dto.user.create.CreateUserOutput;
+import com.petinder.userservice.config.RabbitMqConfig;
+import com.petinder.userservice.dto.EmptyResponse;
+import com.petinder.userservice.dto.comm.CreateUserInput;
+import com.petinder.userservice.dto.comm.ReadPetOutput;
+import com.petinder.userservice.dto.pet.like.LikePetInput;
+import com.petinder.userservice.dto.pet.list.ListUserPetInput;
+import com.petinder.userservice.dto.pet.list.ListUserPetOutput;
+import com.petinder.userservice.dto.pet.recommend.RecommendPetInput;
+import com.petinder.userservice.dto.pet.recommend.RecommendPetOutput;
 import com.petinder.userservice.dto.user.delete.DeleteUserInput;
 import com.petinder.userservice.dto.user.delete.DeleteUserOutput;
 import com.petinder.userservice.dto.user.list.ListUserInput;
@@ -10,29 +17,40 @@ import com.petinder.userservice.dto.user.read.ReadUserInput;
 import com.petinder.userservice.dto.user.read.ReadUserOutput;
 import com.petinder.userservice.dto.user.update.UpdateUserInput;
 import com.petinder.userservice.dto.user.update.UpdateUserOutput;
-import com.petinder.userservice.exception.UserNotFound;
+import com.petinder.userservice.exception.black.PetNotFound;
+import com.petinder.userservice.exception.white.UserNotFound;
 import com.petinder.userservice.mapper.UserMapper;
 import com.petinder.userservice.model.User;
+import com.petinder.userservice.model.UserPet;
+import com.petinder.userservice.repository.UserPetRepository;
 import com.petinder.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
+    private final PetService petService;
     private final UserRepository userRepository;
+    private final UserPetRepository userPetRepository;
 
     @Override
-    public CreateUserOutput createUser(
+    @RabbitListener(queues = RabbitMqConfig.CREATE_USER)
+    public void createUser(
             CreateUserInput input
     ) {
-        User user = userMapper.createUserInputToUser(input);
-        user = userRepository.save(user);
-        return userMapper.userToCreateUserOutput(user);
+        final User user = userMapper.createUserInputToUser(input);
+        userRepository.save(user);
     }
 
     @Override
@@ -71,21 +89,159 @@ public class UserServiceImpl implements UserService {
     public ListUserOutput listUser(
             ListUserInput input
     ) {
-        Page<User> userPage = userRepository.findAll(input.getPageable());
-
-        // Calculate the next page
-        int size = userPage.getSize();
-        int total = userPage.getTotalPages();
-        int nextPage = 0;
-        if (total > 0) {
-            nextPage = (userPage.getNumber() + 1) % total;
-        }
+        final Page<User> userPage = userRepository.findAll(input.getPageable());
 
         // Users output
-        List<ReadUserOutput> users = userPage.getContent().stream()
+        final List<ReadUserOutput> users = userPage.getContent()
+                .stream()
                 .map(userMapper::userToReadUserOutput)
                 .toList();
 
-        return userMapper.toListUserOutput(users, nextPage, size, total);
+        final Pageable nextUserPage = userPage.nextOrLastPageable();
+        return ListUserOutput.builder()
+                .users(users)
+                .nextPage(nextUserPage.getPageNumber())
+                .size(userPage.getSize())
+                .totalPage(userPage.getTotalPages())
+                .totalElements(userPage.getTotalElements())
+                .build();
+    }
+
+    @Override
+    public RecommendPetOutput recommendPet(final RecommendPetInput input) {
+        final UUID userId = input.getUserId();
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFound(userId);
+        }
+
+        // TODO: perform actual recommendation.
+        //  Possibly using current user's location as well as some filtering parameters
+        final List<ReadPetOutput> pets = petService.getPets(List.of()); // get all pets
+
+        return RecommendPetOutput.builder()
+                .pets(pets)
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public EmptyResponse likePet(final LikePetInput input) {
+        final UUID userId = input.getUserId();
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFound(userId);
+        }
+
+        // Save pet to DB
+        if (userPetRepository.existsByUserIdAndPetId(input.getUserId(), input.getPetId())) {
+            log.warn("Duplicate like. Pet is recommended twice to the same user!");
+            return new EmptyResponse();
+        }
+        if (!petService.checkPets(List.of(input.getPetId()))) {
+            throw new PetNotFound(input.getPetId());
+        }
+        final UserPet userPet = UserPet.builder()
+                .userId(input.getUserId())
+                .petId(input.getPetId())
+                .liked(Boolean.TRUE)
+                .build();
+        userPetRepository.saveAndFlush(userPet);    // flush to make sure any DB errors will be thrown now
+
+        // Send it to RabbitMQ
+        petService.likePet(userPet);
+
+        return new EmptyResponse();
+    }
+
+    @Override
+    public ListUserPetOutput listLikePet(ListUserPetInput input) {
+        final UUID userId = input.getUserId();
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFound(userId);
+        }
+
+        // Get a list of liked petIds
+        final Page<UserPet> petPage = userPetRepository.findAllByUserIdAndLiked(
+                userId,
+                true,
+                input.getPageable()
+        );
+        final List<UUID> petIds = petPage.getContent()
+                .stream()
+                .map(UserPet::getPetId)
+                .toList();
+
+        // Get more pet information from Pet Service
+        final List<ReadPetOutput> pets = petService.getPets(petIds);
+        pets.forEach(pet -> pet.setIsLike(true));
+
+        final Pageable nextPetPage = petPage.nextOrLastPageable();
+        return ListUserPetOutput.builder()
+                .pets(pets)
+                .nextPage(nextPetPage.getPageNumber())
+                .nextSize(nextPetPage.getPageSize())
+                .totalPage(petPage.getTotalPages())
+                .totalElements(petPage.getTotalElements())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public EmptyResponse dislikePet(final LikePetInput input) {
+        final UUID userId = input.getUserId();
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFound(userId);
+        }
+
+        // Save pet to DB
+        if (userPetRepository.existsByUserIdAndPetId(input.getUserId(), input.getPetId())) {
+            log.warn("Duplicate dislike. Pet is recommended twice to the same user!");
+            return new EmptyResponse();
+        }
+        if (!petService.checkPets(List.of(input.getPetId()))) {
+            throw new PetNotFound(input.getPetId());
+        }
+        final UserPet userPet = UserPet.builder()
+                .userId(input.getUserId())
+                .petId(input.getPetId())
+                .liked(Boolean.FALSE)
+                .build();
+        userPetRepository.saveAndFlush(userPet);
+
+        // Send it to RabbitMQ
+        petService.dislikePet(userPet);
+
+        return new EmptyResponse();
+    }
+
+    @Override
+    public ListUserPetOutput listDislikePet(ListUserPetInput input) {
+        final UUID userId = input.getUserId();
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFound(userId);
+        }
+
+        // Get a list of liked petIds
+        final Page<UserPet> petPage = userPetRepository.findAllByUserIdAndLiked(
+                userId,
+                false,
+                input.getPageable()
+        );
+        final List<UUID> petIds = petPage.getContent()
+                .stream()
+                .map(UserPet::getPetId)
+                .toList();
+
+        // Get more pet information from Pet Service
+        final List<ReadPetOutput> pets = petService.getPets(petIds);
+        pets.forEach(pet -> pet.setIsLike(false));
+
+        final Pageable nextPetPage = petPage.nextOrLastPageable();
+        return ListUserPetOutput.builder()
+                .pets(pets)
+                .nextPage(nextPetPage.getPageNumber())
+                .nextSize(nextPetPage.getPageSize())
+                .totalPage(petPage.getTotalPages())
+                .totalElements(petPage.getTotalElements())
+                .build();
     }
 }

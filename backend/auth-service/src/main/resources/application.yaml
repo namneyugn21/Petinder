@@ -15,6 +15,11 @@ spring:
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PASSWORD}
 
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    username: ${RABBITMQ_DEFAULT_USER}
+    password: ${RABBITMQ_DEFAULT_PASS}
+
   security:
     oauth2:
       client:

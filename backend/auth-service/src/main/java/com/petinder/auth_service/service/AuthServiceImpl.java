@@ -1,7 +1,7 @@
 package com.petinder.auth_service.service;
 
+import com.petinder.auth_service.config.RabbitMqConfig;
 import com.petinder.auth_service.dto.UserInfo;
-import com.petinder.auth_service.invoker.UserServiceInvoker;
 import com.petinder.auth_service.model.*;
 import com.petinder.auth_service.repository.AccountProviderRepository;
 import com.petinder.auth_service.repository.AccountRepository;
@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -27,8 +29,9 @@ import java.util.Set;
 public class AuthServiceImpl implements AuthService {
     private final AccountRepository accountRepository;
     private final RedirectRepository redirectRepository;
-    private final UserServiceInvoker userServiceInvoker;
     private final AccountProviderRepository accountProviderRepository;
+    private final RabbitTemplate rabbitTemplate;
+    private final TopicExchange topicExchange;
 
     /**
      * Register the user if there is no account associated with {@code authentication}'s email in the DB.
@@ -173,8 +176,7 @@ public class AuthServiceImpl implements AuthService {
         account = accountRepository.save(account);
 
         // Send user info to the User service
-        userInfo.setAccountId(account.getId());
-        userServiceInvoker.addNewUser(userInfo);
+        rabbitTemplate.convertAndSend(topicExchange.getName(), RabbitMqConfig.CREATE_USER, userInfo);
 
         return account;
     }

@@ -16,6 +16,11 @@ spring:
     hibernate:
       ddl-auto: update
 
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    username: ${RABBITMQ_DEFAULT_USER}
+    password: ${RABBITMQ_DEFAULT_PASS}
+
 springdoc:
   api-docs:
     path: '${spring.application.api-prefix}/v3/api-docs'

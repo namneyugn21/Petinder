@@ -1,4 +1,4 @@
-package com.petinder.userservice.dto.pet;
+package com.petinder.userservice.dto.pet.list;
 
 import com.petinder.userservice.dto.comm.ReadPetOutput;
 import lombok.Builder;
@@ -10,7 +10,8 @@ import java.util.List;
 @Builder
 public class ListUserPetOutput {
     private List<ReadPetOutput> pets;
-    private int nextPage;
-    private int nextSize;
-    private int totalPage;
+    private Integer nextPage;
+    private Integer nextSize;
+    private Integer totalPage;
+    private Long totalElements;
 }
