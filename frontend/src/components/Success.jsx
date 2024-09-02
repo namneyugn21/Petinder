@@ -7,8 +7,11 @@ const Success = () => {
     useEffect(() => {
         const url = new URL(window.location.href);
         const token = url.searchParams.get('token');
+        // Change to redux
         if (token) {
             localStorage.setItem('token', token);
+            localStorage.setItem('userId', url.searchParams.get('userId'));
+            console.log("User ID: ", url.searchParams.get('userId'));
             navigate('/');
         }
     }, [navigate]);

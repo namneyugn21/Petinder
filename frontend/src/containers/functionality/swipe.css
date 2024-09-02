@@ -1,21 +1,3 @@
-/* <uniquifier>: Use a unique and descriptive class name
-   <weight>: Use a value from 100 to 900 */
-.inter__bold {
-    font-family: "Inter", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 700;
-    font-style: normal;
-    font-variation-settings:
-        "slnt" 0;
-}
-
-.hubballi-regular {
-    font-family: "Hubballi", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-  
-
 .swipe__container {
     background-color: white;
     height: 85vh;

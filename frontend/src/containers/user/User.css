@@ -8,32 +8,64 @@
     background-image: url('../../assets/dogbones.png');
 }
 .user-info-container {
+    position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    width: 500px;
+    min-width: none;
+    min-height: 65vh;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 15px;
     border: 5px solid #042c54;
     padding: 50px;
     gap: 50px;
 }
-.user-info-header {
+.user-info {
     display: flex;
     align-items: center;
-    gap: 50px;
+    gap: 30px;
+    flex-direction: column;
 }
-.user-info-header img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border: 5px solid #042c54;
-    border-radius: 50%;
-}
-.user-info-fields {
+.user-info__information {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
+    align-items: center;
+}
+.user-info__description-container {
+    display: flex;
+    text-align: center;
+    line-height: 1.5;
+    max-width: 400px;
+}
+
+.user-info__edit-button {
+    background-color: #042c54;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.user-info__edit-button:hover {
+    background-color: transparent;
+    border: 1px solid #042c54;
+    color: #042c54;
+}
+
+.user-info__edit-button:active {
+    background-color: #042c54;
+    border: 1px solid #042c54;
+    color: white;
+}
+  
+.user-info img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 0px solid #042c54;
+    border-radius: 50%;
 }
 .highlighter {
     background-color: hsla(201, 55%, 76%, 0.5);

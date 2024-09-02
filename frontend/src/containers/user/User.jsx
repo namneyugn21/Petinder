@@ -3,21 +3,17 @@ import Navbar from '../../components/navbar/Navbar'
 import './User.css'
 
 const User = () => {
-    const [firstName, setFirstName] = useState('');
-    const [middleName, setMiddleName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await fetch('http://34.134.180.221/user/23c3ce4e-074e-44a5-bb57-956cf025dcf6');
-                const reponseJson = await response.json();
-                const data = reponseJson.data;
-                setFirstName(data.firstName);
-                setMiddleName(data.middleName);
-                setLastName(data.lastName);
-                setEmail(data.email);
+                const response = await fetch('http://petinder.bao2803.co/user/6c49de5a-5288-4dea-871e-8eed5dd3989f');
+                const responseJson = await response.json();
+                console.log(responseJson);
+                localStorage.setItem('firstName', responseJson.data.firstName);
+                localStorage.setItem('lastName', responseJson.data.lastName);
+                localStorage.setItem('email', responseJson.data.email);
+                localStorage.setItem('picture', responseJson.data.picture);
+                localStorage.setItem('description', responseJson.data.description);
             } catch (error) {
                 console.log('ERROR: ', error);
             }
@@ -30,15 +26,20 @@ const User = () => {
             <Navbar/>
             <div className='user-container'>
                 <div className='user-info-container'>
-                    <div className='user-info-header'>
-                        <img src='https://www.w3schools.com/howto/img_avatar.png' alt='avatar' />
-                        <h1 className='ibm-plex-mono-bold'>{firstName} {lastName}</h1>
-                    </div>
-                    <div className='user-info-fields'>
-                        <p className='ibm-plex-mono-regular'><span className='ibm-plex-mono-medium highlighter'>First Name:</span> {firstName}</p>
-                        <p className='ibm-plex-mono-regular'><span className='ibm-plex-mono-medium highlighter'>Middle Name:</span> {middleName}</p>                        
-                        <p className='ibm-plex-mono-regular'><span className='ibm-plex-mono-medium highlighter'>Last Name:</span> {lastName}</p>
-                        <p className='ibm-plex-mono-regular'><span className='ibm-plex-mono-medium highlighter'>Email:</span> {email}</p>                    
+                    <div className='user-info'>
+                        <div className='user-info__avatar'>
+                            <img src={localStorage.getItem('picture')} alt='avatar' />
+                        </div>
+                        <div className='user-info__information'>
+                            <h1 className='montserrat-semibold'>{localStorage.getItem('firstName')} {localStorage.getItem('lastName')}</h1>
+                            <p className='montserrat-medium'>{localStorage.getItem('email')}</p>
+                        </div>
+                        <div className='user-info__description-container'>
+                            <p className='user-info__description montserrat-light'>{localStorage.getItem('description')}</p>
+                        </div>
+                        <div className='user-info__edit-button-container'>
+                            <button className='user-info__edit-button montserrat-medium'>Edit</button>
+                        </div>
                     </div>
                 </div>
             </div>
