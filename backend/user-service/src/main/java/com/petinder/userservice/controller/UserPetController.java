@@ -23,7 +23,7 @@ import java.util.UUID;
 public class UserPetController {
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping("/recommend")
     public ResponseDTO<RecommendPetOutput> recommendPet(
             @RequestParam UUID userId   // TODO: use JWT
     ) {
@@ -35,7 +35,7 @@ public class UserPetController {
         return ResponseDTO.success(output);
     }
 
-    @PostMapping("/pet/like")
+    @PostMapping("/like")
     public ResponseDTO<EmptyResponse> likePet(
             @RequestParam UUID userId,  // TODO: use JWT
             @RequestBody LikePetInput input
@@ -46,7 +46,7 @@ public class UserPetController {
         return ResponseDTO.success(output);
     }
 
-    @GetMapping("/pet/like")
+    @GetMapping("/like")
     public ResponseDTO<ListUserPetOutput> listLikePet(
             @RequestParam UUID userId,  // TODO: use JWT
 
@@ -62,7 +62,7 @@ public class UserPetController {
         return ResponseDTO.success(output);
     }
 
-    @PostMapping("/pet/dislike")
+    @PostMapping("/dislike")
     public ResponseDTO<EmptyResponse> dislikePet(
             @RequestParam UUID userId,  // TODO: use JWT
             @RequestBody LikePetInput input
@@ -73,7 +73,7 @@ public class UserPetController {
         return ResponseDTO.success(output);
     }
 
-    @GetMapping("/pet/dislike")
+    @GetMapping("/dislike")
     public ResponseDTO<ListUserPetOutput> listDislikePet(
             @RequestParam UUID userId,  // TODO: use JWT
 
