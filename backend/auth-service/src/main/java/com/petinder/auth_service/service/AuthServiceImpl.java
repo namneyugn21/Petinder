@@ -176,6 +176,7 @@ public class AuthServiceImpl implements AuthService {
         account = accountRepository.save(account);
 
         // Send user info to the User service
+        userInfo.setAccountId(account.getId());
         rabbitTemplate.convertAndSend(topicExchange.getName(), RabbitMqConfig.CREATE_USER, userInfo);
 
         return account;
