@@ -93,8 +93,13 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public List<ReadPetOutput> readPetBulk(List<UUID> petIds) {
-        return petRepository.findAllById(petIds)
-                .stream()
+        final List<Pet> pets;
+        if (petIds == null) {
+            pets = petRepository.findAll();
+        } else {
+            pets = petRepository.findAllById(petIds);
+        }
+        return pets.stream()
                 .map(petMapper::petToReadPetOutput)
                 .toList();
     }

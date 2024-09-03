@@ -80,7 +80,7 @@ public class PetController {
     @Hidden
     @GetMapping("/internal")
     public List<ReadPetOutput> readPetBulk(
-            @RequestParam List<UUID> petIds
+            @RequestParam(required = false) List<UUID> petIds
     ) {
         return petService.readPetBulk(petIds);
     }
