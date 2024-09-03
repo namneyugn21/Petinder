@@ -2,8 +2,12 @@ package com.petinder.userservice.dto.comm;
 
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class CreateUserInput {
+    private UUID accountId;
+
     private String email;
 
     private String firstName;

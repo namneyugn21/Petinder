@@ -9,8 +9,8 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
+    @Mapping(target = "id", source = "accountId")
     User createUserInputToUser(CreateUserInput input);
-
 
     ReadUserOutput userToReadUserOutput(User user);
 
