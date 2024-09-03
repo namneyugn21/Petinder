@@ -28,6 +28,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     ResponseEntity<ResponseDTO<?>> exceptionHandler(RuntimeException e) {
         log.error(String.valueOf(e));
+        e.printStackTrace(System.err);
 
         String message = WHITE_LIST.contains(e.getClass()) ? e.getMessage() : GENERIC_MSG;
         HttpStatus status = EXCEPTION_TO_HTTP_STATUS.getOrDefault(e.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);

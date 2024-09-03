@@ -43,7 +43,7 @@ public class PetServiceImpl implements PetService {
         pet = petRepository.save(pet);
 
         // Call User Service to register the pet to the owner
-        userServiceInvoker.registerPet(pet.getOwnerId(), pet.getId());
+//        userServiceInvoker.registerPet(pet.getOwnerId(), pet.getId());
 
         return petMapper.petToCreatePetOutput(pet);
     }
