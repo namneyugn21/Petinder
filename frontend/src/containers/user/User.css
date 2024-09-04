@@ -7,66 +7,99 @@
     height: 85vh;
     background-image: url('../../assets/dogbones.png');
 }
+
 .user-info-container {
-    position: relative;
+    width: 600px;
     display: flex;
     flex-direction: column;
-    min-width: none;
-    min-height: 65vh;
     background-color: white;
+    border: 2px solid #042c54;
     border-radius: 15px;
-    border: 5px solid #042c54;
-    padding: 50px;
-    gap: 50px;
-}
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    flex-direction: column;
-}
-.user-info__information {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-}
-.user-info__description-container {
-    display: flex;
-    text-align: center;
-    line-height: 1.5;
-    max-width: 400px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
 
-.user-info__edit-button {
+.user-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info-header {
+    border-bottom: 1px solid hsla(210, 91%, 17%, 0.2);
+    font-size: 28px;
+    color: #042c54;
+    padding-bottom: 25px;
+}
+
+.user-info-subheader {
+    color: #042c54;
+    padding-bottom: 10px;
+}
+
+.user-info-row {
+    padding: 25px 0px;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid hsla(210, 91%, 17%, 0.2);
+    gap: 20px;
+}
+
+.user-info-input {
+    width: 200px;
+    height: 30px;
+    border-radius: 5px;
+    border: 2px solid hsla(210, 91%, 17%, 0.4);
+    padding: 15px 10px;
+    font-size: 16px;
+}
+
+.user-info-input::placeholder {
+    color: hsla(210, 91%, 17%, 0.4);
+    font-style: italic;
+}
+
+.user-info-edit-button {
+    cursor: pointer;
+}
+
+.user-info-utilities {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 25px;
+}
+
+.user-info-utilities-button {
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 5px;
     background-color: #042c54;
     color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 15px;
-    cursor: pointer;
-    font-size: 15px;
+    font-size: 16px;
+    transition: 0.2s;
+    box-shadow: 0px 0px 5px 0px hsla(210, 91%, 17%, 0.4);
 }
 
-.user-info__edit-button:hover {
-    background-color: transparent;
-    border: 1px solid #042c54;
+.user-info-utilities-button:hover {
+    background-color: white;
     color: #042c54;
 }
 
-.user-info__edit-button:active {
-    background-color: #042c54;
-    border: 1px solid #042c54;
+.user-info-utilities-button:active {
+    box-shadow: 0px 0px 5px 0px hsla(210, 91%, 17%, 0.2);
+}
+
+.user-info-utilities-button:disabled {
+    cursor: not-allowed;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: hsla(210, 91%, 17%, 0.4);
     color: white;
-}
-  
-.user-info img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border: 0px solid #042c54;
-    border-radius: 50%;
-}
-.highlighter {
-    background-color: hsla(201, 55%, 76%, 0.5);
+    font-size: 16px;
+    transition: 0.2s;
+    box-shadow: none;
 }

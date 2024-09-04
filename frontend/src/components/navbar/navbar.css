@@ -16,8 +16,7 @@ a {
 }
 
 .navbar__title {
-    font-size: 36px;
-    font-weight: 800;
+    font-size: 32px;
     display: flex;
     align-items: center;
 }
@@ -40,7 +39,6 @@ a {
 
 .navbar__menu-item:hover svg {
     display: block;
-
 }
 
 .navbar__menu-item svg {
@@ -110,6 +108,7 @@ a {
     padding-right: 20px;
     padding-bottom: 10px;
     list-style-type: none;
+    transition: background-color 0.1s;
 }
 
 .navbar__menu-desktop-item:hover {
@@ -164,7 +163,7 @@ a {
 }
 
 .navbar__menu-signed-in-item:hover, .navbar__menu-signed-in-item-active {
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: #ffffff99;
     box-shadow:  0 0 10px rgba(0, 0, 0, 0.2);
     cursor: pointer;
 }

@@ -4,7 +4,6 @@ import './swipe.css'
 
 import { motion, useMotionValue, useTransform } from 'framer-motion'
 
-import demo from '../../assets/demo.webp'
 import yes from '../../assets/yes-button.png'
 import no from '../../assets/no-button.png'
 import prev from '../../assets/prev-button.png'
@@ -78,18 +77,15 @@ const Swipe = () => {
                         <div className='swipe__subcontainer'>
                             <div className='swipe__subcontainer-left'>
                                 <div className='swipe__subcontainer-image-container'>
-                                    <img src={demo} alt='shelter-dog' className='swipe__subcontainer-image'></img>
+                                    <img src={pets[currentIndex].picture} alt='shelter-dog' className='swipe__subcontainer-image'></img>
                                 </div>
                             </div>          
                             <div className='swipe__subcontainer-right'>
                                 <div className='swipe__subcontainer-description-container'>
-                                    <h1 className='inter__bold'>{pets[currentIndex].name}</h1>
+                                    <h1 className='montserrat-bold'>{pets[currentIndex].name}</h1>
                                     <div className='swipe__subcontainer-description'> 
                                         <div className='swipe__subcontainer-description-paragraph'>
-                                            <p className='hubballi-regular'>
-                                                Hi there!
-                                                My name is {pets[currentIndex].name}, and I'm a playful {pets[currentIndex].breed}. I love playing fetch, going on long walks, and getting lots of belly rubs. I can't wait to find my forever home where I can share all my tail wags and joy. Come visit me at the shelter and let's be best friends!
-                                            </p>
+                                            <p className='hubballi-regular'>{pets[currentIndex].description}</p>
                                         </div>
                                         <div className='swipe__subcontainer-description-info hubballi-regular'>
                                             <p>Eyes colour: {pets[currentIndex].eyeColor}</p>

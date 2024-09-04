@@ -26,7 +26,7 @@ const Navbar = () => {
     }, []);
 
     const signOut = () => {
-        localStorage.removeItem('token');
+        localStorage.clear();
         setIsSignedIn(false);
         navigate('/');
         window.location.reload();
@@ -58,6 +58,7 @@ const Navbar = () => {
     const handleClickOutside = (event) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
             setisToggleDesktopMenuVisible(false);
+            setIsActive(false);
         }
     };
     // Add event listener on component mount and remove it on unmount
@@ -134,6 +135,10 @@ const Navbar = () => {
                         <li className='navbar__menu-desktop-item' onClick={() => navigate('/user')}>
                             Profile
                         </li>
+                        <li className='navbar__menu-desktop-item' onClick={() => navigate('/swipe')}>
+                            Swipe
+                        </li>
+                        <div className='navbar__menu-desktop-divider'></div>
                         <a href='#safety'><li className='navbar__menu-desktop-item' onClick={() => navigate('/')}>
                             Safety
                         </li></a>

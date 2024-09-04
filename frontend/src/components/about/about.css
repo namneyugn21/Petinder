@@ -16,14 +16,14 @@
 .about__title h1 {
     font-size: 36px;
     color: #042c54;
+    padding: 20px;
 }
 .about__introduction p {
     font-size: 18px;
     line-height: 1.5;
     color: hsla(210, 91%, 17%, 0.7);
-    background-color: hsla(0, 0%, 100%, 0.6);
-    padding-top: 10px;
-    padding-bottom: 10px;
+    background-color: hsla(0, 0%, 100%, 0.3);
+    padding: 20px;
 }
 .about__image {
     width: 50%;
@@ -32,15 +32,14 @@
     justify-content: end;
 }
 .about__image img {
-    width: 350px;
-    height: 450px;
+    width: 500px;
     object-fit: cover;
     border: 5px solid #042c54;
     border-radius: 10%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 .about__button {
-    padding-top: 20px;
+    padding: 20px;
     display: flex;
     align-items: end;
 }
