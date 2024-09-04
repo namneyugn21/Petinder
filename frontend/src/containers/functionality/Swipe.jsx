@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from '../../components'
 import './swipe.css'
 
-import { motion, useMotionValue, useTransform } from 'framer-motion'
+import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion'
 
 import yes from '../../assets/yes-button.png'
 import no from '../../assets/no-button.png'
@@ -24,7 +24,7 @@ const Swipe = () => {
     useEffect(() => {
         const fetchPets = async () => {
             try {
-                const response = await fetch('http://petinder.bao2803.co/pet?page=0&size=10&sort=name%2CASC');
+                const response = await fetch('http://petinder.bao2803.co:8080/pet?page=0&size=10&sort=name%2CASC');
                 const responseJson = await response.json();
                 setPets(responseJson.data.pets);
             } catch (error) {
@@ -63,55 +63,57 @@ const Swipe = () => {
             <Navbar /> {/* Render the Navbar component */}
             <div className='swipe__container'>
                 {pets.length > 0 ? (
-                    <motion.div 
-                        className='swipe__card' 
-                        style={{ x, y, rotate }} // Apply the x-axis value and the rotation value to the card
-                        drag='x' // Enable the drag gesture on the x-axis
-                        dragConstraints={{ left: 0, right: 0 }} // Set the constraints for the drag gesture
-                        onDrag={(_, info) => {
-                            // Update y position based on vertical drag
-                            y.set(info.offset.y);
-                        }}
-                        onDragEnd={handleDragEnd} // Handle the drag end event
-                    >
-                        <div className='swipe__subcontainer'>
-                            <div className='swipe__subcontainer-left'>
-                                <div className='swipe__subcontainer-image-container'>
-                                    <img src={pets[currentIndex].picture} alt='shelter-dog' className='swipe__subcontainer-image'></img>
-                                </div>
-                            </div>          
-                            <div className='swipe__subcontainer-right'>
-                                <div className='swipe__subcontainer-description-container'>
-                                    <h1 className='montserrat-bold'>{pets[currentIndex].name}</h1>
-                                    <div className='swipe__subcontainer-description'> 
-                                        <div className='swipe__subcontainer-description-paragraph'>
-                                            <p className='hubballi-regular'>{pets[currentIndex].description}</p>
-                                        </div>
-                                        <div className='swipe__subcontainer-description-info hubballi-regular'>
-                                            <p>Eyes colour: {pets[currentIndex].eyeColor}</p>
-                                            <p>Furs colour: {pets[currentIndex].furColor}</p>
-                                            <p>Breed: {pets[currentIndex].breed}</p>
-                                            <p>Age: {pets[currentIndex].age}</p>
-                                            <p>Weight: {pets[currentIndex].weight}</p>
-                                        </div>
+                    <AnimatePresence>
+                        <motion.div 
+                            key={pets[currentIndex].id} // Use a unique key for AnimatePresence
+                            className='swipe__card' 
+                            style={{ x, rotate }}
+                            drag='x'
+                            dragConstraints={{ left: 0, right: 0 }}
+                            onDragEnd={handleDragEnd}
+                            initial={{ opacity: 0 }} // Initial animation
+                            animate={{ opacity: 1 }} // Animation when the card is rendered
+                            transition={{ duration: 0.3 }}
+                        >
+                            <div className='swipe__subcontainer'>
+                                <div className='swipe__subcontainer-left'>
+                                    <div className='swipe__subcontainer-image-container'>
+                                        <img src={pets[currentIndex].picture} alt='shelter-dog' className='swipe__subcontainer-image'></img>
                                     </div>
-                                    <div className='swipe__subcontainer-buttons'>
-                                        <div className='swipe__subcontainer-button swipe__subcontainer-buttons-no-image' onClick={handleNoClick}>
-                                            <img src={no} alt='no-button'></img>
+                                </div>          
+                                <div className='swipe__subcontainer-right'>
+                                    <div className='swipe__subcontainer-description-container'>
+                                        <h1 className='montserrat-bold'>{pets[currentIndex].name}</h1>
+                                        <div className='swipe__subcontainer-description'> 
+                                            <div className='swipe__subcontainer-description-paragraph'>
+                                                <p className='hubballi-regular'>{pets[currentIndex].description}</p>
+                                            </div>
+                                            <div className='swipe__subcontainer-description-info hubballi-regular'>
+                                                <p>Eyes colour: {pets[currentIndex].eyeColor}</p>
+                                                <p>Furs colour: {pets[currentIndex].furColor}</p>
+                                                <p>Breed: {pets[currentIndex].breed}</p>
+                                                <p>Age: {pets[currentIndex].age}</p>
+                                                <p>Weight: {pets[currentIndex].weight}</p>
+                                            </div>
                                         </div>
-                                        <div className='swipe__subcontainer-button swipe__subcontainer-buttons-prev-image' onClick={handlePrevClick}>
-                                            <img src={prev} alt='prev-button'></img>
-                                        </div>
-                                        <div className='swipe__subcontainer-button swipe__subcontainer-buttons-yes-image' onClick={handleYesClick}>
-                                            <img src={yes} alt='yes-button'></img>
+                                        <div className='swipe__subcontainer-buttons'>
+                                            <div className='swipe__subcontainer-button swipe__subcontainer-buttons-no-image' onClick={handleNoClick}>
+                                                <img src={no} alt='no-button'></img>
+                                            </div>
+                                            <div className='swipe__subcontainer-button swipe__subcontainer-buttons-prev-image' onClick={handlePrevClick}>
+                                                <img src={prev} alt='prev-button'></img>
+                                            </div>
+                                            <div className='swipe__subcontainer-button swipe__subcontainer-buttons-yes-image' onClick={handleYesClick}>
+                                                <img src={yes} alt='yes-button'></img>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    </AnimatePresence>
                 ) : (
-                    <div className='swipe__subcontainer'>
+                    <div className='swipe__subcontainer' style={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
                         <p className='hubballi-regular out-of-order-msg'>Seems like you have met all of our furry friends!</p>
                     </div>
                 )}

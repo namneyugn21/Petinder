@@ -10,8 +10,8 @@
 
 .swipe__subcontainer {
     display: flex;
-    background-color: hsla(201, 54%, 76%, 0.7);
-    padding: 10px;
+    background-color: hsla(210, 91%, 17%, 0.9);
+    padding: 8px;
     border-radius: 20px;
     position: relative;
     box-shadow: 0px 0px 10px 0px hsla(201, 54%, 76%, 0.5);
