@@ -12,7 +12,7 @@ const Success = () => {
                 localStorage.setItem('token', token);
                 localStorage.setItem('userId', url.searchParams.get('userId'));
                 try {
-                    const response = await fetch('http://petinder.bao2803.co/user/' + localStorage.getItem('userId'));
+                    const response = await fetch('http://petinder.bao2803.co:8080/user/' + localStorage.getItem('userId'));
                     const responseJson = await response.json();
                     const data = responseJson.data;
                     localStorage.setItem('picture', data.picture);
