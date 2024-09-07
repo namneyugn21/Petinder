@@ -1,10 +1,6 @@
 package com.petinder.userservice.controller;
 
-import com.petinder.userservice.dto.EmptyResponse;
 import com.petinder.userservice.dto.ResponseDTO;
-import com.petinder.userservice.dto.pet.like.LikePetInput;
-import com.petinder.userservice.dto.pet.list.ListUserPetInput;
-import com.petinder.userservice.dto.pet.list.ListUserPetOutput;
 import com.petinder.userservice.dto.user.delete.DeleteUserInput;
 import com.petinder.userservice.dto.user.delete.DeleteUserOutput;
 import com.petinder.userservice.dto.user.list.ListUserInput;
@@ -14,6 +10,7 @@ import com.petinder.userservice.dto.user.read.ReadUserOutput;
 import com.petinder.userservice.dto.user.update.UpdateUserInput;
 import com.petinder.userservice.dto.user.update.UpdateUserOutput;
 import com.petinder.userservice.service.UserService;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -71,5 +69,13 @@ public class UserController {
                 .build();
         ListUserOutput output = userService.listUser(input);
         return ResponseDTO.success(output);
+    }
+
+    @Hidden
+    @GetMapping("/internal/check")
+    public Boolean check(
+            @RequestParam List<UUID> userIds
+    ) {
+        return userService.check(userIds);
     }
 }

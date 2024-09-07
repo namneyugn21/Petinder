@@ -244,4 +244,9 @@ public class UserServiceImpl implements UserService {
                 .totalElements(petPage.getTotalElements())
                 .build();
     }
+
+    @Override
+    public Boolean check(List<UUID> userIds) {
+        return userRepository.findAllById(userIds).size() == userIds.size();
+    }
 }
