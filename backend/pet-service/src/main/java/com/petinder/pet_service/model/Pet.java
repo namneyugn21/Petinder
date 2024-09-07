@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -17,33 +18,33 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "pet")
-public class Pet {
+public class Pet implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "owner_id", nullable = false)
-    private UUID ownerId;            // user currently own the pet: user has type shelter if the pet is not adopted
-
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
-
-    private String picture;
-
-    private String description;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
 
     @CreationTimestamp
+    @Column(name = "create_at", nullable = false, updatable = false)
     private Instant createAt;
 
     @UpdateTimestamp
+    @Column(name = "update_at", nullable = false)
     private Instant updateAt;
 
     @Embedded
     private PetProperty property;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "shelter_id")
+    private Shelter shelter;
 
     public enum Status {
         ADOPTED,    // already adopted

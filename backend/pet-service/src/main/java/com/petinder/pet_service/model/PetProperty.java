@@ -4,22 +4,30 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @Embeddable
-public class PetProperty {
-    @Column(nullable = false)
+public class PetProperty implements Serializable {
+    @Column(name = "picture")
+    private String picture;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "age", nullable = false)
     private Age age;
 
-    @Column(nullable = false)
+    @Column(name = "weight", nullable = false)
     private double weight;
 
-    @Column(nullable = false)
+    @Column(name = "breed", nullable = false)
     private String breed;
 
-    @Column(nullable = false)
+    @Column(name = "fur_color", nullable = false)
     private String furColor;
 
-    @Column(nullable = false)
+    @Column(name = "eye_color", nullable = false)
     private String eyeColor;
 
     public enum Age {
