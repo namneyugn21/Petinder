@@ -13,14 +13,15 @@ spring:
         corsConfigurations:
           '[/**]':
             allowedOrigins:
-            - "http://localhost"
-            - "http://petinder.bao2803.co"
+              - "http://localhost"
+              - "http://localhost:3000"
+              - "http://petinder.bao2803.co"
             allowedHeaders: "*"
             allowedMethods:
-            - "GET"
-            - "POST"
-            - "PUT"
-            - "DELETE"
+              - "GET"
+              - "POST"
+              - "PUT"
+              - "DELETE"
       forwarded:
         enabled: true
       routes:
