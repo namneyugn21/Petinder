@@ -171,8 +171,13 @@ public class UserServiceImpl implements UserService {
                 .toList();
 
         // Get more pet information from Pet Service
-        final List<ReadPetOutput> pets = petService.getPets(petIds);
-        pets.forEach(pet -> pet.setIsLike(true));
+        final List<ReadPetOutput> pets;
+        if (!petIds.isEmpty()) {
+            pets = petService.getPets(petIds);
+            pets.forEach(pet -> pet.setIsLike(true));
+        } else {
+            pets = List.of();
+        }
 
         final Pageable nextPetPage = petPage.nextOrLastPageable();
         return ListUserPetOutput.builder()
@@ -232,8 +237,13 @@ public class UserServiceImpl implements UserService {
                 .toList();
 
         // Get more pet information from Pet Service
-        final List<ReadPetOutput> pets = petService.getPets(petIds);
-        pets.forEach(pet -> pet.setIsLike(false));
+        final List<ReadPetOutput> pets;
+        if (!petIds.isEmpty()) {
+            pets = petService.getPets(petIds);
+            pets.forEach(pet -> pet.setIsLike(false));
+        } else {
+            pets = List.of();
+        }
 
         final Pageable nextPetPage = petPage.nextOrLastPageable();
         return ListUserPetOutput.builder()
