@@ -56,6 +56,16 @@
     font-size: 16px;
 }
 
+.user-info-input-textarea {
+    width: 100%;
+    height: 100px;
+    font-size: 16px;
+    font-style: italic;
+    padding: 15px 10px;
+    line-height: 1.5;
+    resize: vertical;
+}
+
 .user-info-input::placeholder {
     color: hsla(210, 91%, 17%, 0.4);
     font-style: italic;
@@ -102,4 +112,182 @@
     font-size: 16px;
     transition: 0.2s;
     box-shadow: none;
+}
+
+@media screen and (max-width: 1280px) {
+    .user-info-container {
+        width: 550px;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        border: 2px solid #042c54;
+        border-radius: 15px;
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+    .user-info-header {
+        border-bottom: 1px solid hsla(210, 91%, 17%, 0.2);
+        font-size: 25px;
+        color: #042c54;
+        padding-bottom: 25px;
+    }
+    
+    .user-info-subheader {
+        color: #042c54;
+        padding-bottom: 10px;
+        font-size: 15px;
+    }
+    
+    .user-info-row {
+        padding: 20px 0px;
+        display: flex;
+        flex-direction: row;
+        border-bottom: 1px solid hsla(210, 91%, 17%, 0.2);
+        gap: 20px;
+        font-size: 15px;
+    }
+    
+    .user-info-input {
+        width: 200px;
+        height: 30px;
+        border-radius: 5px;
+        border: 2px solid hsla(210, 91%, 17%, 0.4);
+        padding: 15px 5px;
+        font-size: 15px;
+    }
+
+    .user-info-utilities {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+        padding-top: 25px;
+    }
+    
+    .user-info-utilities-button {
+        cursor: pointer;
+        padding: 8px 18px;
+        border-radius: 5px;
+        background-color: #042c54;
+        color: white;
+        font-size: 15px;
+        transition: 0.2s;
+        box-shadow: 0px 0px 5px 0px hsla(210, 91%, 17%, 0.4);
+    }
+
+    .user-info-utilities-button:disabled {
+        cursor: not-allowed;
+        padding: 8px 18px;
+        border-radius: 5px;
+        background-color: hsla(210, 91%, 17%, 0.4);
+        color: white;
+        font-size: 15px;
+        transition: 0.2s;
+        box-shadow: none;
+    }
+
+    .user-info-input-textarea {
+        width: 100%;
+        max-height: 80px;
+        font-size: 15px;
+        font-style: italic;
+        padding: 10px 10px;
+        line-height: 1.5;
+        resize: vertical;
+    }
+}
+
+@media screen and (max-width: 414px) {
+    .user-container {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        padding-top: 100px;
+        height: 87vh;
+    }
+    .user-info-container {
+        height: 500px;
+        width: 350px;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        border: 2px solid #042c54;
+        border-radius: 15px;
+        padding-left: 30px;
+        padding-right: 30px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+    .user-info-header {
+        border-bottom: 1px solid hsla(210, 91%, 17%, 0.2);
+        font-size: 20px;
+        color: #042c54;
+        padding-bottom: 25px;
+    }
+    
+    .user-info-subheader {
+        color: #042c54;
+        padding-bottom: 10px;
+        font-size: 13px;
+    }
+    
+    .user-info-row {
+        padding: 15px 0px;
+        display: flex;
+        flex-direction: row;
+        border-bottom: 1px solid hsla(210, 91%, 17%, 0.2);
+        gap: 20px;
+        font-size: 13px;
+    }
+    
+    .user-info-input {
+        width: 150px;
+        height: 30px;
+        border-radius: 5px;
+        border: 2px solid hsla(210, 91%, 17%, 0.4);
+        padding: 10px 5px;
+        font-size: 12px;
+    }
+
+    .user-info-utilities {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+        padding-top: 10px;
+    }
+    
+    .user-info-utilities-button {
+        cursor: pointer;
+        padding: 8px 18px;
+        border-radius: 5px;
+        background-color: #042c54;
+        color: white;
+        font-size: 13px;
+        transition: 0.2s;
+        box-shadow: 0px 0px 5px 0px hsla(210, 91%, 17%, 0.4);
+    }
+
+    .user-info-utilities-button:disabled {
+        cursor: not-allowed;
+        padding: 8px 18px;
+        border-radius: 5px;
+        background-color: hsla(210, 91%, 17%, 0.4);
+        color: white;
+        font-size: 12px;
+        transition: 0.2s;
+        box-shadow: none;
+    }
+
+    .user-info-input-textarea {
+        width: 100%;
+        height: 100px;
+        font-size: 12px;
+        font-style: italic;
+        padding: 5px 10px;
+        line-height: 1.5;
+        resize: vertical;
+    }
 }

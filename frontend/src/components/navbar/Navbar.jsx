@@ -132,6 +132,9 @@ const Navbar = () => {
             {isToggleDesktopMenuVisible && (
                 <div className='montserrat-regular navbar__menu-desktop-toggle' ref={dropdownRef}>
                     <ul className='navbar__menu-desktop-dropdown'>
+                        <li className='navbar__menu-desktop-item' onClick={() => navigate('/')}>
+                            About
+                        </li>
                         <li className='navbar__menu-desktop-item' onClick={() => navigate('/user')}>
                             Profile
                         </li>
@@ -160,19 +163,28 @@ const Navbar = () => {
                 { // Adding mobile menu dropdown
                     isToggleMobileMenuVisible && (
                     <div className={`navbar__menu-mobile-dropdown ${isFadingOut ? 'fade-out' : 'fade-in'} montserrat-regular`}>
-                        <div className='navbar__menu-item tracking-in-expand' onClick={() => navigate('/')}><a href='#about'>About</a></div>
-                        <div className='navbar__menu-item tracking-in-expand' onClick={() => navigate('/user')}>
-                            Profile
-                        </div>
-                        <div className='navbar__menu-item tracking-in-expand' onClick={() => navigate('/')}><a href='#safety'>Safety</a></div>  
                         {isSignedIn ? (
-                            <div className='navbar__menu-item tracking-in-expand'>
-                                <button className='navbar__menu-button montserrat-regular tracking-in-expand' type='button' onClick={() => {signOut(); setIsToggleMobileMenuVisible(false);}}>Sign Out</button>
-                            </div>  
+                            <>
+                                <div className='navbar__menu-mobile-item tracking-in-expand' onClick={() => navigate('/')}>About</div>
+                                <div className='navbar__menu-mobile-item tracking-in-expand' onClick={() => navigate('/user')}>
+                                    Profile
+                                </div>
+                                <div className='navbar__menu-mobile-item tracking-in-expand' onClick={() => navigate('/swipe')}>
+                                    Swipe
+                                </div>
+                                <div className='navbar__menu-mobile-item tracking-in-expand' onClick={() => navigate('/')}><a href='#safety'>Safety</a></div>
+                                <div className='navbar__menu-mobile-item tracking-in-expand'>
+                                    <button className='navbar__menu-button montserrat-regular tracking-in-expand' type='button' onClick={() => {signOut(); setIsToggleMobileMenuVisible(false);}} style={{ width: '115px' }}>Sign Out</ button>
+                                </div>  
+                            </>
                         ) : (
-                            <div className='navbar__menu-item tracking-in-expand'>
+                            <>
+                            <div className='navbar__menu-mobile-item tracking-in-expand' onClick={() => navigate('/')}>About</div>
+                            <div className='navbar__menu-mobile-item tracking-in-expand' onClick={() => navigate('/')}><a href='#safety'>Safety</a></div>
+                            <div>
                                 <button className='navbar__menu-button montserrat-regular tracking-in-expand' type='button' onClick={() => {toggleLoginForm(); setIsToggleMobileMenuVisible(false);}}>Sign In</button>
                             </div>
+                            </>
                         )}
                     </div>
                     )

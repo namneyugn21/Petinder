@@ -8,16 +8,16 @@ We're currently focusing on developing the swiping interface, bringing the heart
 ## 📸 **Previews**
 Here's a sneak peek at what Petinder looks like so far:
 
-### 🏠 Home Page
+### Home Page
 ![Home Page](<documentation/screenshots/homepage.png>)
 
-### 🔐 Sign In Form
+### Sign In Form
 ![Sign In Form](<documentation/screenshots/signin.png>)
 
-### 💖 Swipe Page
+### Swipe Page
 ![Swipe Page](<documentation/screenshots/swipe.png>)
 
-### 🛡️ Safety Information
+### Safety Information
 ![Safety Information](<documentation/screenshots/safety.png>)
 
 ---

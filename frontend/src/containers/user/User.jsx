@@ -180,9 +180,9 @@ const User = () => {
                             { isEditingDescription ?
                                 <textarea 
                                     type='text' 
-                                    className='user-info-input montserrat-medium' 
+                                    className='user-info-input-textarea montserrat-medium' 
                                     placeholder='Tell us about yourself...' 
-                                    style={{ width: '100%', minHeight: '100px', resize: 'vertical', lineHeight: '1.5' }}
+                                    style={{ fontStyle: 'italic' }}
                                     value={user.description}
                                     onChange={(e) => setUser({...user, description: e.target.value})}
                                 />
