@@ -13,9 +13,10 @@ import com.petinder.pet_service.dto.read.ReadPetOutput;
 import com.petinder.pet_service.dto.update.UpdatePetInput;
 import com.petinder.pet_service.dto.update.UpdatePetOutput;
 import com.petinder.pet_service.exception.PetNotFound;
-import com.petinder.pet_service.invoker.UserServiceInvoker;
+import com.petinder.pet_service.exception.ShelterNotFound;
 import com.petinder.pet_service.mapper.PetMapper;
 import com.petinder.pet_service.model.Pet;
+import com.petinder.pet_service.model.Shelter;
 import com.petinder.pet_service.repository.PetRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -34,17 +35,21 @@ import java.util.UUID;
 public class PetServiceImpl implements PetService {
     private final PetMapper petMapper;
     private final PetRepository petRepository;
-    private final UserServiceInvoker userServiceInvoker;
+    private final ShelterService shelterService;
 
     @Transactional
     public CreatePetOutput createPet(CreatePetInput createPetInput) {
         Pet pet = petMapper.createPetInputToPet(createPetInput);
         pet.setStatus(Pet.Status.FREE);
+
+        // Get shelter reference for Many-To-One mapping
+        final Shelter shelterReference = shelterService.getShelterReferenceById(createPetInput.getShelterId());
+        if (shelterReference == null) {
+            throw new ShelterNotFound(createPetInput.getShelterId());
+        }
+        pet.setShelter(shelterReference);
+
         pet = petRepository.save(pet);
-
-        // Call User Service to register the pet to the owner
-//        userServiceInvoker.registerPet(pet.getOwnerId(), pet.getId());
-
         return petMapper.petToCreatePetOutput(pet);
     }
 

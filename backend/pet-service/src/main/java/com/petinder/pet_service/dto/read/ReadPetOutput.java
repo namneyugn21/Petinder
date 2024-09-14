@@ -12,7 +12,7 @@ public class ReadPetOutput {
     private String picture;
     private String description;
     private PetProperty.Age age;
-    private double weight;
+    private Double weight;
     private String breed;
     private String furColor;
     private String eyeColor;

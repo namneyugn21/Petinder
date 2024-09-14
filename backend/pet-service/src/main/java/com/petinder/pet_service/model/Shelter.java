@@ -12,12 +12,12 @@ import java.util.UUID;
 
 @Data
 @Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "shelter")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Shelter implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @EqualsAndHashCode.Include
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 

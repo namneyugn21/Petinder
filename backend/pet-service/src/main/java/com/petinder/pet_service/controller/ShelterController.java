@@ -28,8 +28,10 @@ public class ShelterController {
 
     @PostMapping
     public ResponseDTO<CreateShelterOutput> createShelter(
+            @RequestParam final UUID userId,
             @Valid @RequestBody final CreateShelterInput input
     ) {
+        input.setOwnerId(userId);
         final CreateShelterOutput output = shelterService.createShelter(input);
         return ResponseDTO.success(output);
     }

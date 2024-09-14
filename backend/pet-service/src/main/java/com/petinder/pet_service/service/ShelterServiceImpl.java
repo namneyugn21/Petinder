@@ -14,6 +14,7 @@ import com.petinder.pet_service.invoker.UserServiceInvoker;
 import com.petinder.pet_service.mapper.ShelterMapper;
 import com.petinder.pet_service.model.Shelter;
 import com.petinder.pet_service.repository.ShelterRepository;
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class ShelterServiceImpl implements ShelterService {
     private final ShelterRepository shelterRepository;
     private final UserServiceInvoker userServiceInvoker;
 
+    @Override
     public CreateShelterOutput createShelter(final CreateShelterInput input) {
         Shelter shelter = shelterMapper.createShelterInputToShelter(input);
         if (!userServiceInvoker.checkUserIds(input.getOwnerId())) {
@@ -50,12 +53,14 @@ public class ShelterServiceImpl implements ShelterService {
         return shelterMapper.shelterToUpdateShelterOutput(shelter);
     }
 
+    @Override
     public ReadShelterOutput readShelter(final ReadShelterInput input) {
         final Shelter shelter = shelterRepository.findById(input.getId())
                 .orElseThrow(() -> new ShelterNotFound(input.getId()));
         return shelterMapper.shelterToReadShelterOutput(shelter);
     }
 
+    @Override
     public ListShelterOutput listShelter(final ListShelterInput input) {
         final Page<Shelter> shelters = shelterRepository.findAll(input.getPageable());
 
@@ -76,5 +81,14 @@ public class ShelterServiceImpl implements ShelterService {
                 .nextPage(nextPage)
                 .totalElements(totalElements)
                 .build();
+    }
+
+    @Override
+    public Shelter getShelterReferenceById(@Nonnull UUID shelterId) {
+        if (!shelterRepository.existsById(shelterId)) {
+            return null;
+        }
+
+        return shelterRepository.getReferenceById(shelterId);
     }
 }

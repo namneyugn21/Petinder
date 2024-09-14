@@ -14,7 +14,7 @@ public class CreatePetInput {
     private String name;
 
     @NotNull(message = "Pet must be own by someone, either a shelter or a user")
-    private UUID ownerId;
+    private UUID shelterId;
 
     private String picture;
 

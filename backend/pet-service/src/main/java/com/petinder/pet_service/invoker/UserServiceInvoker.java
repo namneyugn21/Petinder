@@ -24,7 +24,7 @@ public class UserServiceInvoker {
     public boolean checkUserIds(List<UUID> userIds) {
         String uri = UriComponentsBuilder.fromHttpUrl(ENDPOINT)
                 .path("/check")
-                .queryParam("userId", userIds)
+                .queryParam("userIds", userIds)
                 .toUriString();
         log.debug("URI: {}", uri);
 

@@ -12,9 +12,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UpdatePetInput {
     @Min(0)
-    private double weight;
+    private Double weight;
     private UUID id;
-    private UUID ownerId;
+    private UUID shelterId;
     private String description;
     private Pet.Status status;
     private String name;
