@@ -14,8 +14,9 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -27,11 +28,14 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+    private final JwtService jwtService;
+    private final TopicExchange topicExchange;
+    private final RabbitTemplate rabbitTemplate;
     private final AccountRepository accountRepository;
     private final RedirectRepository redirectRepository;
     private final AccountProviderRepository accountProviderRepository;
-    private final RabbitTemplate rabbitTemplate;
-    private final TopicExchange topicExchange;
+    private final HttpStatusReturningLogoutSuccessHandler DEFAULT_LOGOUT_HANDLER =
+            new HttpStatusReturningLogoutSuccessHandler();
 
     /**
      * Register the user if there is no account associated with {@code authentication}'s email in the DB.
@@ -74,10 +78,31 @@ public class AuthServiceImpl implements AuthService {
                 .fromUriString(redirectUri)
                 .queryParam("userId", account.getId())
                 .queryParam("role", roles)
-                .queryParam("token", ((OidcUser) user).getIdToken().getTokenValue())    // TODO: generate JWT
+                .queryParam("token", jwtService.generateJwt(account, roles))
                 .build()
                 .toUriString();
         response.sendRedirect(redirectUri);
+    }
+
+    /**
+     * Invalidate the JWT token after all logout handlers has bell called by the LogoutHandler.
+     *
+     * @param request        the request which caused the successful logout
+     * @param response       the response
+     * @param authentication the <tt>Authentication</tt> object which was created during
+     *                       the authentication process.
+     * @throws IOException if fail to redirect to the home page
+     */
+    @Override
+    public void onLogoutSuccess(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication
+    ) throws IOException {
+        if (authentication instanceof JwtAuthenticationToken token) {
+            jwtService.invalidateJwt(token);
+        }
+        DEFAULT_LOGOUT_HANDLER.onLogoutSuccess(request, response, authentication);
     }
 
     /**
@@ -119,7 +144,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
-     * Register the user if s/he does not exist in the database.
+     * Register the user if s/he doesn't exist in the database.
      * Link the user with the provider if this is the first time the user log in via that provider.
      *
      * @param user     the OAuth2 returned by the {@link OAuth2User}
