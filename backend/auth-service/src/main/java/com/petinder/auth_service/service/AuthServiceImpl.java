@@ -10,13 +10,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -34,8 +35,6 @@ public class AuthServiceImpl implements AuthService {
     private final AccountRepository accountRepository;
     private final RedirectRepository redirectRepository;
     private final AccountProviderRepository accountProviderRepository;
-    private final HttpStatusReturningLogoutSuccessHandler DEFAULT_LOGOUT_HANDLER =
-            new HttpStatusReturningLogoutSuccessHandler();
 
     /**
      * Register the user if there is no account associated with {@code authentication}'s email in the DB.
@@ -82,27 +81,6 @@ public class AuthServiceImpl implements AuthService {
                 .build()
                 .toUriString();
         response.sendRedirect(redirectUri);
-    }
-
-    /**
-     * Invalidate the JWT token after all logout handlers has bell called by the LogoutHandler.
-     *
-     * @param request        the request which caused the successful logout
-     * @param response       the response
-     * @param authentication the <tt>Authentication</tt> object which was created during
-     *                       the authentication process.
-     * @throws IOException if fail to redirect to the home page
-     */
-    @Override
-    public void onLogoutSuccess(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Authentication authentication
-    ) throws IOException {
-        if (authentication instanceof JwtAuthenticationToken token) {
-            jwtService.invalidateJwt(token);
-        }
-        DEFAULT_LOGOUT_HANDLER.onLogoutSuccess(request, response, authentication);
     }
 
     /**
@@ -205,5 +183,9 @@ public class AuthServiceImpl implements AuthService {
         rabbitTemplate.convertAndSend(topicExchange.getName(), RabbitMqConfig.CREATE_USER, userInfo);
 
         return account;
+    }
+
+    public void logout(JwtAuthenticationToken token) {
+        jwtService.invalidateJwt(token);
     }
 }

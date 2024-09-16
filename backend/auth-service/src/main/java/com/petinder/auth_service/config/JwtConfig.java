@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
 import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -32,6 +33,10 @@ public class JwtConfig {
     private RSAPrivateKey priv;
 
     @Bean
+    public JwtAuthenticationProvider jwtAuthenticationProvider() {
+        return new JwtAuthenticationProvider(jwtDecoder());
+    }
+
     public JwtDecoder jwtDecoder() {
         final NimbusJwtDecoder decoder = NimbusJwtDecoder.withPublicKey(this.key).build();
         decoder.setJwtValidator(blackListValidator());

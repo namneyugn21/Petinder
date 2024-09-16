@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final JwtDecoder jwtDecoder;
     private final AuthService authenticationService;
     private final OAuth2AuthorizationRequestResolver authorizationRequestResolver;
 
@@ -52,18 +54,25 @@ public class SecurityConfig {
                                         API_PREFIX + OAuth2LoginAuthenticationFilter.DEFAULT_FILTER_PROCESSES_URI
                                 )
                 )
+                .oauth2ResourceServer(oauth ->
+                        oauth
+                                .jwt(jwtConfigurer ->
+                                        jwtConfigurer
+                                                .decoder(jwtDecoder)
+                                )
+
+                )
                 .sessionManagement(session ->
                         session
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .exceptionHandling(exceptions ->
                         exceptions
                                 .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
                                 .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                 )
-                .logout(logout ->
-                        logout
-                                .logoutSuccessHandler(authenticationService)
-                )
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
