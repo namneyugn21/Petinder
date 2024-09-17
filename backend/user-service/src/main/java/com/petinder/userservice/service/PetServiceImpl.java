@@ -43,7 +43,7 @@ public class PetServiceImpl implements PetService {
     public List<ReadPetOutput> getPetsAfter(final UUID petId) {
         final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ENDPOINT)
                 .pathSegment("internal", "from")
-                .queryParam("id", petId.toString());
+                .queryParam("id", petId);
 
         return restClient.get()
                 .uri(builder.toUriString())

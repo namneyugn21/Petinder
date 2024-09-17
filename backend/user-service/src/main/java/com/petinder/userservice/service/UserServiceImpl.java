@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
         // TODO: perform better recommendation.
         //  Possibly using current user's location as well as some filtering parameters
         UUID lastPetId = null;
-        final Optional<UserPet> userPetOption = userPetRepository.findFirstByOrderByCreateAtDesc();
+        final Optional<UserPet> userPetOption = userPetRepository.findFirstByUserIdOrderByCreateAtDesc(userId);
         if (userPetOption.isPresent()) {
             lastPetId = userPetOption.get().getPetId();
         }

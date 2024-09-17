@@ -16,5 +16,5 @@ public interface UserPetRepository extends JpaRepository<UserPet, UserPetKey> {
 
     boolean existsByUserIdAndPetId(UUID userId, UUID petId);
 
-    Optional<UserPet> findFirstByOrderByCreateAtDesc();
+    Optional<UserPet> findFirstByUserIdOrderByCreateAtDesc(UUID userId);
 }
