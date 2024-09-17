@@ -86,6 +86,14 @@ public class PetController {
     }
 
     @Hidden
+    @GetMapping("/internal/from")
+    public List<ReadPetOutput> readPetAfter(
+            @RequestParam(required = false) UUID id
+    ) {
+        return petService.readPetAfter(id);
+    }
+
+    @Hidden
     @GetMapping("/internal/check")
     public Boolean checkPetBulk(
             @RequestParam List<UUID> petIds

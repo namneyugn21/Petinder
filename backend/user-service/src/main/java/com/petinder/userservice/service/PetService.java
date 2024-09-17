@@ -9,6 +9,9 @@ import java.util.UUID;
 public interface PetService {
     List<ReadPetOutput> getPets(List<UUID> petIds);
 
+    List<ReadPetOutput> getPetsAfter(UUID after);
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean checkPets(List<UUID> petIds);
 
     void likePet(final UserPet userPet);

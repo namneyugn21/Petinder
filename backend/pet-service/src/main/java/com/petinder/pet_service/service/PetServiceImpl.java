@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -112,6 +113,19 @@ public class PetServiceImpl implements PetService {
     @Override
     public Boolean checkPetBulk(List<UUID> petIds) {
         return petRepository.findAllById(petIds).size() == petIds.size();
+    }
+
+    @Override
+    @Transactional
+    public List<ReadPetOutput> readPetAfter(UUID afterPetId) {
+        final int LIMIT = 10;
+        final Stream<Pet> result;
+        if (afterPetId == null) {
+            result = petRepository.findTopByCreateAt(LIMIT);
+        } else {
+            result = petRepository.findTopByCreateAtAfter(afterPetId, LIMIT);
+        }
+        return result.map(petMapper::petToReadPetOutput).toList();
     }
 
     @RabbitListener(queues = RabbitMqConfig.LIKE_PET)

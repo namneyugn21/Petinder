@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -114,10 +115,15 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFound(userId);
         }
 
-        // TODO: perform actual recommendation.
+        // TODO: perform better recommendation.
         //  Possibly using current user's location as well as some filtering parameters
-        final List<ReadPetOutput> pets = petService.getPets(List.of()); // get all pets
+        UUID lastPetId = null;
+        final Optional<UserPet> userPetOption = userPetRepository.findFirstByOrderByCreateAtDesc();
+        if (userPetOption.isPresent()) {
+            lastPetId = userPetOption.get().getPetId();
+        }
 
+        final List<ReadPetOutput> pets = petService.getPetsAfter(lastPetId);
         return RecommendPetOutput.builder()
                 .pets(pets)
                 .build();

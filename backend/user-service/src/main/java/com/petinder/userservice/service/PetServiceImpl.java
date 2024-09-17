@@ -40,6 +40,19 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    public List<ReadPetOutput> getPetsAfter(final UUID petId) {
+        final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ENDPOINT)
+                .pathSegment("internal", "from")
+                .queryParam("id", petId.toString());
+
+        return restClient.get()
+                .uri(builder.toUriString())
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {
+                });
+    }
+
+    @Override
     public boolean checkPets(final List<UUID> petIds) {
         if (petIds == null || petIds.isEmpty()) {
             return false;

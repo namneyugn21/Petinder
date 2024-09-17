@@ -10,6 +10,7 @@ import com.petinder.pet_service.dto.read.ReadPetInput;
 import com.petinder.pet_service.dto.read.ReadPetOutput;
 import com.petinder.pet_service.dto.update.UpdatePetInput;
 import com.petinder.pet_service.dto.update.UpdatePetOutput;
+import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,4 +29,6 @@ public interface PetService {
     List<ReadPetOutput> readPetBulk(List<UUID> petIds);
 
     Boolean checkPetBulk(List<UUID> petIds);
+
+    List<ReadPetOutput> readPetAfter(@Nullable UUID afterPetId);
 }
