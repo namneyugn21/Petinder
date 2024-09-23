@@ -10,6 +10,8 @@ import com.petinder.pet_service.dto.list.ListPetInput;
 import com.petinder.pet_service.dto.list.ListPetOutput;
 import com.petinder.pet_service.dto.read.ReadPetInput;
 import com.petinder.pet_service.dto.read.ReadPetOutput;
+import com.petinder.pet_service.dto.search.SearchPetInput;
+import com.petinder.pet_service.dto.search.SearchPetOutput;
 import com.petinder.pet_service.dto.update.UpdatePetInput;
 import com.petinder.pet_service.dto.update.UpdatePetOutput;
 import com.petinder.pet_service.exception.PetNotFound;
@@ -126,6 +128,15 @@ public class PetServiceImpl implements PetService {
             result = petRepository.findTopByCreateAtAfter(afterPetId, LIMIT);
         }
         return result.map(petMapper::petToReadPetOutput).toList();
+    }
+
+    @Override
+    @Transactional
+    public SearchPetOutput searchPet(SearchPetInput input) {
+        List<ReadPetOutput> pets = petRepository.searchByKeyword(input.getKeyword(), input.getLimit())
+                .map(petMapper::petToReadPetOutput)
+                .toList();
+        return new SearchPetOutput(pets);
     }
 
     @RabbitListener(queues = RabbitMqConfig.LIKE_PET)

@@ -34,4 +34,16 @@ public interface PetRepository extends JpaRepository<Pet, UUID> {
             nativeQuery = true
     )
     Stream<Pet> findTopByCreateAt(@Param("limit") int limit);
+
+    @Query(
+            value = """
+                    SELECT *, ts_rank(text_search_vector, to_tsquery('english', COALESCE(:keyword, '%'))) AS rank
+                    FROM pet
+                    WHERE text_search_vector @@ to_tsquery('english', COALESCE(:keyword, '%'))
+                    ORDER BY rank DESC
+                    LIMIT :limit;
+                    """,
+            nativeQuery = true
+    )
+    Stream<Pet> searchByKeyword(@Param("keyword") String keyword, @Param("limit") long limit);
 }

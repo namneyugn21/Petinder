@@ -21,6 +21,7 @@ public interface PetMapper {
     @Mapping(target = "property.weight", source = "weight")
     @Mapping(target = "property.breed", source = "breed")
     @Mapping(target = "property.furColor", source = "furColor")
+    @Mapping(target = "property.description", source = "description")
     @Mapping(target = "property.eyeColor", source = "eyeColor")
     Pet createPetInputToPet(CreatePetInput createPetInput);
 
@@ -28,12 +29,14 @@ public interface PetMapper {
     @Mapping(target = "weight", source = "property.weight")
     @Mapping(target = "breed", source = "property.breed")
     @Mapping(target = "furColor", source = "property.furColor")
+    @Mapping(target = "description", source = "property.description")
     @Mapping(target = "eyeColor", source = "property.eyeColor")
     CreatePetOutput petToCreatePetOutput(Pet pet);
 
     @Mapping(target = "age", source = "property.age")
     @Mapping(target = "weight", source = "property.weight")
     @Mapping(target = "breed", source = "property.breed")
+    @Mapping(target = "description", source = "property.description")
     @Mapping(target = "furColor", source = "property.furColor")
     @Mapping(target = "eyeColor", source = "property.eyeColor")
     ReadPetOutput petToReadPetOutput(Pet pet);
@@ -42,6 +45,7 @@ public interface PetMapper {
     @Mapping(target = "updateAt", ignore = true)
     @Mapping(target = "property.age", source = "age")
     @Mapping(target = "property.weight", source = "weight")
+    @Mapping(target = "property.description", source = "description")
     @Mapping(target = "property.breed", source = "breed")
     @Mapping(target = "property.furColor", source = "furColor")
     @Mapping(target = "property.eyeColor", source = "eyeColor")
@@ -52,6 +56,7 @@ public interface PetMapper {
     @Mapping(target = "weight", source = "property.weight")
     @Mapping(target = "breed", source = "property.breed")
     @Mapping(target = "furColor", source = "property.furColor")
+    @Mapping(target = "description", source = "property.description")
     @Mapping(target = "eyeColor", source = "property.eyeColor")
     UpdatePetOutput petToUpdatePetOutput(Pet pet);
 

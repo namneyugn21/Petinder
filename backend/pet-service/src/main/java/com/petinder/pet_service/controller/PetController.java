@@ -9,6 +9,8 @@ import com.petinder.pet_service.dto.list.ListPetInput;
 import com.petinder.pet_service.dto.list.ListPetOutput;
 import com.petinder.pet_service.dto.read.ReadPetInput;
 import com.petinder.pet_service.dto.read.ReadPetOutput;
+import com.petinder.pet_service.dto.search.SearchPetInput;
+import com.petinder.pet_service.dto.search.SearchPetOutput;
 import com.petinder.pet_service.dto.update.UpdatePetInput;
 import com.petinder.pet_service.dto.update.UpdatePetOutput;
 import com.petinder.pet_service.service.PetService;
@@ -47,6 +49,16 @@ public class PetController {
         ReadPetInput readPetInput = new ReadPetInput(petId);
         ReadPetOutput readPetOutput = petService.readPet(readPetInput);
         return ResponseDTO.success(readPetOutput);
+    }
+
+    @GetMapping("/search")
+    public ResponseDTO<SearchPetOutput> searchPet(
+            @RequestParam String keyword,
+            @RequestParam Long limit
+    ) {
+        SearchPetInput searchPetInput = new SearchPetInput(keyword, Math.min(limit, 100));  // limit nResult to 100
+        SearchPetOutput searchPetOutput = petService.searchPet(searchPetInput);
+        return ResponseDTO.success(searchPetOutput);
     }
 
     @GetMapping
