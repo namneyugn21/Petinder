@@ -132,19 +132,35 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public EmptyResponse likePet(final LikePetInput input) {
+        // Check if the user exists
         final UUID userId = input.getUserId();
         if (!userRepository.existsById(userId)) {
             throw new UserNotFound(userId);
         }
 
-        // Save pet to DB
-        if (userPetRepository.existsByUserIdAndPetId(input.getUserId(), input.getPetId())) {
-            log.warn("Duplicate like. Pet is recommended twice to the same user!");
-            return new EmptyResponse();
-        }
+        // Check if the pet exists
         if (!petService.checkPets(List.of(input.getPetId()))) {
             throw new PetNotFound(input.getPetId());
         }
+
+        // Check if the user interacted (like or dislike) with the pet before
+        Optional<UserPet> userPetOption = userPetRepository.findByUserIdAndPetId(userId, input.getPetId());
+        if (userPetOption.isPresent()) { // if the user interacted with the pet before
+            final UserPet userPet = userPetOption.get();
+            // If the user disliked the pet and now liked it, remove the dislike and change it to like
+            if (!userPet.getLiked()) {
+                userPet.setLiked(Boolean.TRUE);
+                userPetRepository.saveAndFlush(userPet);
+                // Send it to RabbitMQ
+                petService.likePet(userPet);
+                return new EmptyResponse();
+            } else { // if the user liked the pet before, do nothing
+                log.warn("Duplicate like. Pet is recommended twice to the same user!");
+                return new EmptyResponse();
+            }
+        }
+
+        // If the user never interacted with the pet before, save it to DB
         final UserPet userPet = UserPet.builder()
                 .userId(input.getUserId())
                 .petId(input.getPetId())
@@ -203,14 +219,29 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFound(userId);
         }
 
-        // Save pet to DB
-        if (userPetRepository.existsByUserIdAndPetId(input.getUserId(), input.getPetId())) {
-            log.warn("Duplicate dislike. Pet is recommended twice to the same user!");
-            return new EmptyResponse();
-        }
+        // Check if the pet exists
         if (!petService.checkPets(List.of(input.getPetId()))) {
             throw new PetNotFound(input.getPetId());
         }
+
+        // Check if the user interacted (like or dislike) with the pet before
+        Optional<UserPet> userPetOption = userPetRepository.findByUserIdAndPetId(userId, input.getPetId());
+        if (userPetOption.isPresent()) { // if the user interacted with the pet before
+            final UserPet userPet = userPetOption.get();
+            // If the user liked the pet and now disliked it, remove the like and change it to dislike
+            if (userPet.getLiked()) {
+                userPet.setLiked(Boolean.FALSE);
+                userPetRepository.saveAndFlush(userPet);
+                // Send it to RabbitMQ
+                petService.dislikePet(userPet);
+                return new EmptyResponse();
+            } else { // if the user disliked the pet before, do nothing
+                log.warn("Duplicate dislike. Pet is disliked twice by the same user!");
+                return new EmptyResponse();
+            }
+        }
+
+        // If the user never interacted with the pet before, save it to DB
         final UserPet userPet = UserPet.builder()
                 .userId(input.getUserId())
                 .petId(input.getPetId())
