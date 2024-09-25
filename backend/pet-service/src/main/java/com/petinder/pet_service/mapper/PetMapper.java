@@ -21,6 +21,7 @@ public interface PetMapper {
     @Mapping(target = "property.weight", source = "weight")
     @Mapping(target = "property.breed", source = "breed")
     @Mapping(target = "property.furColor", source = "furColor")
+    @Mapping(target = "property.picture", source = "picture")
     @Mapping(target = "property.description", source = "description")
     @Mapping(target = "property.eyeColor", source = "eyeColor")
     Pet createPetInputToPet(CreatePetInput createPetInput);
@@ -29,6 +30,7 @@ public interface PetMapper {
     @Mapping(target = "weight", source = "property.weight")
     @Mapping(target = "breed", source = "property.breed")
     @Mapping(target = "furColor", source = "property.furColor")
+    @Mapping(target = "picture", source = "property.picture")
     @Mapping(target = "description", source = "property.description")
     @Mapping(target = "eyeColor", source = "property.eyeColor")
     CreatePetOutput petToCreatePetOutput(Pet pet);
@@ -36,6 +38,7 @@ public interface PetMapper {
     @Mapping(target = "age", source = "property.age")
     @Mapping(target = "weight", source = "property.weight")
     @Mapping(target = "breed", source = "property.breed")
+    @Mapping(target = "picture", source = "property.picture")
     @Mapping(target = "description", source = "property.description")
     @Mapping(target = "furColor", source = "property.furColor")
     @Mapping(target = "eyeColor", source = "property.eyeColor")
@@ -47,6 +50,7 @@ public interface PetMapper {
     @Mapping(target = "property.weight", source = "weight")
     @Mapping(target = "property.description", source = "description")
     @Mapping(target = "property.breed", source = "breed")
+    @Mapping(target = "property.picture", source = "picture")
     @Mapping(target = "property.furColor", source = "furColor")
     @Mapping(target = "property.eyeColor", source = "eyeColor")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -56,6 +60,7 @@ public interface PetMapper {
     @Mapping(target = "weight", source = "property.weight")
     @Mapping(target = "breed", source = "property.breed")
     @Mapping(target = "furColor", source = "property.furColor")
+    @Mapping(target = "picture", source = "property.picture")
     @Mapping(target = "description", source = "property.description")
     @Mapping(target = "eyeColor", source = "property.eyeColor")
     UpdatePetOutput petToUpdatePetOutput(Pet pet);
