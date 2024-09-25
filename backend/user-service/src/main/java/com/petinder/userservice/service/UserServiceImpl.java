@@ -132,25 +132,28 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public EmptyResponse likePet(final LikePetInput input) {
+        // Check if the user exists
         final UUID userId = input.getUserId();
         if (!userRepository.existsById(userId)) {
             throw new UserNotFound(userId);
         }
 
-        // Save pet to DB
-        if (userPetRepository.existsByUserIdAndPetId(input.getUserId(), input.getPetId())) {
-            log.warn("Duplicate like. Pet is recommended twice to the same user!");
-            return new EmptyResponse();
-        }
+        // Check if the pet exists
         if (!petService.checkPets(List.of(input.getPetId()))) {
             throw new PetNotFound(input.getPetId());
         }
-        final UserPet userPet = UserPet.builder()
-                .userId(input.getUserId())
-                .petId(input.getPetId())
-                .liked(Boolean.TRUE)
-                .build();
-        userPetRepository.saveAndFlush(userPet);    // flush to make sure any DB errors will be thrown now
+
+        // Create/Update a UserPet with LIKE=TRUE
+        final UserPet userPet = userPetRepository.findByUserIdAndPetId(userId, input.getPetId())
+                .orElse(
+                        UserPet.builder()
+                                .userId(input.getUserId())
+                                .petId(input.getPetId())
+                                .liked(Boolean.TRUE)
+                                .build()
+                );
+        userPet.setLiked(Boolean.TRUE);
+        userPetRepository.saveAndFlush(userPet);
 
         // Send it to RabbitMQ
         petService.likePet(userPet);
@@ -203,19 +206,21 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFound(userId);
         }
 
-        // Save pet to DB
-        if (userPetRepository.existsByUserIdAndPetId(input.getUserId(), input.getPetId())) {
-            log.warn("Duplicate dislike. Pet is recommended twice to the same user!");
-            return new EmptyResponse();
-        }
+        // Check if the pet exists
         if (!petService.checkPets(List.of(input.getPetId()))) {
             throw new PetNotFound(input.getPetId());
         }
-        final UserPet userPet = UserPet.builder()
-                .userId(input.getUserId())
-                .petId(input.getPetId())
-                .liked(Boolean.FALSE)
-                .build();
+
+        // Create/Update a UserPet with LIKE=FALSE
+        final UserPet userPet = userPetRepository.findByUserIdAndPetId(userId, input.getPetId())
+                .orElse(
+                        UserPet.builder()
+                                .userId(input.getUserId())
+                                .petId(input.getPetId())
+                                .liked(Boolean.FALSE)
+                                .build()
+                );
+        userPet.setLiked(Boolean.FALSE);
         userPetRepository.saveAndFlush(userPet);
 
         // Send it to RabbitMQ
