@@ -13,6 +13,7 @@ public class ReadPetOutput {
     private String breed;
     private String furColor;
     private String eyeColor;
+    private String description;
 
     // Filled by THIS service
     @JsonInclude(JsonInclude.Include.NON_NULL)
