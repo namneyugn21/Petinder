@@ -8,7 +8,7 @@ import Navbar from '../navbar/Navbar';
 const About = () => {
     const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
     const [isFadingOut, setIsFadingOut] = useState(false);
-    const [isSignedIn, setIsSignedIn] = React.useState(false);
+    const [isSignedIn, setIsSignedIn] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -34,6 +34,17 @@ const About = () => {
         }
     };
 
+    // Render the get started button if user is not signed in
+    const renderButton = () => {
+        return (
+            <div className='about__button slide-top-button'>
+                <button className='montserrat-medium' onClick={isSignedIn ? navigateToSwipePage : toggleLoginForm}>
+                    Get Started
+                </button>
+            </div>
+        );
+    };
+
     return (
         <>
             <Navbar />
@@ -43,15 +54,7 @@ const About = () => {
                     <div className='about__introduction montserrat-medium slide-top-introduction'>
                         <p>Welcome to Petinder,<br></br><br></br>You can now find your perfect furry companion is as easy as swiping right! Our web application connects you with adorable pets available for adoption at local shelters.<br></br><br></br> Discover your new best friend today!</p>
                     </div>
-                    {isSignedIn ?
-                        <div className='about__button slide-top-button'>
-                            <button className='montserrat-medium' onClick={navigateToSwipePage}>Get Started</button>
-                        </div>
-                        :
-                        <div className='about__button slide-top-button'>
-                        <button className='montserrat-medium' onClick={toggleLoginForm}>Get Started</button>
-                        </div>
-                    }
+                    {renderButton()}
                 </div>
                 <div className='about__image'>
                     <img src={index} alt='smiling dog' draggable='false' />

@@ -84,7 +84,7 @@ const Navbar = () => {
             setIsToggleButtonVisible(true);
         }
     };
-
+    
     return (
         <div className='navbar'>
             <NavLink to='/'>
