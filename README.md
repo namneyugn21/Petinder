@@ -3,7 +3,11 @@
 Petinder is an innovative web application designed to connect users with pets available for adoption at local shelters, offering a swiping experience similar to the popular Tinder app. Discover your perfect pet match with just a swipe!
 
 ## 🚀 **Project Updates**
-We're currently focusing on developing the swiping interface, bringing the heart of Petinder to life. Please note that due to the high cost of hosting and deploying a backend database, we've opted to run all necessary databases locally in separate terminal instances, alongside the frontend. This approach is temporary, and we aim to streamline the deployment process in future updates.
+We are excited to announce that the swiping feature is now fully implemented, bringing the core functionality of Petinder to life! Users can now explore and engage with pets directly on the website. In addition to this milestone, we have begun working on integrating Facebook login to enhance user access and convenience.
+
+Furthermore, we are creating a user interface specifically for shelters, allowing them to log in and manage their pet profiles seamlessly. In future updates, we plan to incorporate Google Maps to display shelter locations, making it easier for users to find pets near them.
+
+We are also pleased to share that we now have a hosting server in place, allowing for a smoother user experience. This resolves the temporary solution of running local databases alongside the frontend, streamlining the deployment process.
 
 ## 📸 **Previews**
 Here's a sneak peek at what Petinder looks like so far:
