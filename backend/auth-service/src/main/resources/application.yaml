@@ -34,6 +34,11 @@ spring:
             client-id: ${META_ID}
             client-secret: ${META_SECRET}
             scope: public_profile, email
+          github:
+            redirect-uri: "{baseUrl}${spring.application.api-prefix}/login/oauth2/code/{registrationId}"
+            client-id: ${GITHUB_ID}
+            client-secret: ${GITHUB_SECRET}
+            scope: email, profile
 
   jpa:
     hibernate:
