@@ -19,6 +19,7 @@
     padding-right: 50px;
     padding-top: 50px;
     padding-bottom: 50px;
+    box-shadow: 0px 0px 5px 0px hsla(210, 91%, 17%, 0.4);
 }
 
 .user-info {
@@ -55,6 +56,9 @@
     padding: 15px 10px;
     font-size: 16px;
 }
+.user-info-input:focus {
+    border: 2px solid #042c54;
+}
 
 .user-info-input-textarea {
     width: 100%;
@@ -64,6 +68,10 @@
     padding: 15px 10px;
     line-height: 1.5;
     resize: vertical;
+    border: 2px solid hsla(210, 91%, 17%, 0.4);
+}
+.user-info-input-textarea:focus {
+    border: 2px solid #042c54;
 }
 
 .user-info-input::placeholder {

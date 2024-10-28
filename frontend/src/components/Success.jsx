@@ -16,6 +16,7 @@ const Success = () => {
                     const responseJson = await response.json();
                     const data = responseJson.data;
                     localStorage.setItem('picture', data.picture);
+                    localStorage.setItem('firstName', data.firstName);
                 } catch (error) {
                     console.log('ERROR: ', error);
                 }

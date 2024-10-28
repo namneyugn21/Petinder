@@ -39,7 +39,7 @@ const Navbar = () => {
             setTimeout(() => {
                 setIsLoginFormVisible(false);
                 setIsFadingOut(false);
-            }, 250);
+            }, 0);
         } else {
             setIsLoginFormVisible(true);
         }

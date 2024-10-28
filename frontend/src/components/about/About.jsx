@@ -9,13 +9,26 @@ const About = () => {
     const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
     const [isFadingOut, setIsFadingOut] = useState(false);
     const [isSignedIn, setIsSignedIn] = useState(false);
+    const [greeting, setGreeting] = useState('Welcome to Petinder !');
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
             setIsSignedIn(true);
+            
+            // Determine the greeting based on the time of the day
+            const currentHour = new Date().getHours();
+            if (currentHour >= 5 && currentHour < 12) {
+                setGreeting('Good morning, ' + localStorage.getItem('firstName') + ' !');
+            } else if (currentHour >= 12 && currentHour < 18) {
+                setGreeting('Good afternoon, ' + localStorage.getItem('firstName') + ' !');
+            } else {
+                setGreeting('Good evening, ' + localStorage.getItem('firstName') + ' !');
+            }
         }
+
+
     }, []);
 
     const navigateToSwipePage = () => {
@@ -28,7 +41,7 @@ const About = () => {
             setTimeout(() => {
                 setIsLoginFormVisible(false);
                 setIsFadingOut(false);
-            }, 250);
+            }, 0);
         } else {
             setIsLoginFormVisible(true);
         }
@@ -50,7 +63,12 @@ const About = () => {
             <Navbar />
             <div className='about' id='about'>
                 <div className='about__title'>
-                    <h1 className='montserrat-bold slide-top-title'>Find your sidekick !</h1>
+                    {/* Title and introduction */}
+                    { isSignedIn ? 
+                        <h1 className='montserrat-bold slide-top-title'>{greeting}</h1>
+                        :
+                        <h1 className='montserrat-bold slide-top-title'>{greeting}</h1>
+                    }
                     <div className='about__introduction montserrat-medium slide-top-introduction'>
                         <p>Welcome to Petinder,<br></br><br></br>You can now find your perfect furry companion is as easy as swiping right! Our web application connects you with adorable pets available for adoption at local shelters.<br></br><br></br> Discover your new best friend today!</p>
                     </div>
